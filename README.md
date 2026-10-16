@@ -13,12 +13,13 @@ Cada etapa conserva una pregunta, una prueba que se puede jugar y una explicaci�
 5. **La Sombra y el Pulso:** patrulla horizontal y una forma de despejarla.
 6. **Del dungeon al observatorio:** comparar el contexto con el mismo tablero.
 7. **La última casilla:** responder la devolución del profesor con tres casos jugables.
+8. **Sellos y compuertas:** probar un sello que abre un camino, solo y junto a la Sombra.
 
 Las demos usan el **motor oficial de PuzzleScript**, incluido en el repositorio para que no dependan de una página externa. El adaptador lee el tablero y la web lo dibuja. Las reglas de juego están en [web/prototipos](web/prototipos), no duplicadas en la interfaz.
 
 ## La Sombra y el feedback
 
-La Sombra ocupa piso oscuro y bloquea la entrada. Se mueve en horizontal después de un movimiento válido y se frena o cambia de dirección ante luz o paredes. **Pulso**, con Espacio o el botón, disipa una Sombra vecina sin mover al jugador ni iluminar el piso. Después puedo entrar en esa casilla, incluso si es la última que falta, y ganar.
+La Sombra ocupa piso oscuro y bloquea la entrada. Se mueve en horizontal después de un movimiento válido y se frena o cambia de dirección ante luz o paredes. **Pulso**, con X, Espacio o el botón, disipa una Sombra vecina sin mover al jugador ni iluminar el piso. Después puedo entrar en esa casilla, incluso si es la última que falta, y ganar.
 
 El caso mínimo empieza con dos casillas: jugador en luz y Sombra en oscuridad. Se comprueban los tres pasos: entrada bloqueada, Pulso, entrada y victoria. También hay un pasillo con patrulla y una sala completa.
 
@@ -32,7 +33,7 @@ Necesita Node.js 20 o superior. No hay dependencias para instalar.
 npm run dev
 ```
 
-Abrir la dirección que imprime el servidor. Flechas o WASD mueven al jugador; Espacio usa Pulso; Z deshace y R reinicia. También hay controles en pantalla.
+Abrir la dirección que imprime el servidor. Flechas o WASD mueven al jugador; X o Espacio usa Pulso; Z deshace y R reinicia. También hay controles en pantalla.
 
 ```sh
 npm test
@@ -40,17 +41,25 @@ node scripts/verify-prototypes.mjs
 npm run build
 ```
 
-El verificador busca y reproduce soluciones en el motor de PuzzleScript. Hay **9 casos con condición de victoria**, además de la primera prueba libre. Los recorridos comprobados se guardan en [web/data/verification.json](web/data/verification.json). Las pruebas cubren también el encierro, la recuperación, el Pulso lejano y las colisiones de la Sombra.
+El verificador busca y reproduce soluciones en el motor de PuzzleScript. Hay **11 casos con condición de victoria**, además de la primera prueba libre. Los recorridos comprobados se guardan en [web/data/verification.json](web/data/verification.json). Las pruebas cubren también el encierro, la recuperación, el Pulso lejano y las colisiones de la Sombra.
+
+## Web y apariencia
+
+La dirección principal es [web/index.html](https://juanchibruzzone.github.io/Videojuegos.Aplicado/web/index.html). La raíz redirige a esa página y conserva el fragmento de navegación. El build mantiene la misma estructura, tanto si Pages sirve la rama como si publica el artefacto de Actions.
+
+El selector **Claro / Oscuro** está arriba a la derecha. Usa la preferencia del sistema hasta elegir un tema y recuerda esa elección en el navegador. El texto de lectura usa 16 px, controles y explicaciones breves 14 px, y los metadatos 12 px como mínimo.
+
+El documento nativo de scope está en la carpeta de Drive del proyecto: [Scope — Pasos de Luz](https://docs.google.com/document/d/12ipp_OEbfiu44vDaXs30RaV3pqQidQ-FUhxg5mEtUYQ).
 
 ## Activar GitHub Pages
 
-El workflow está preparado. Cuando habilites Actions, elegí **Settings → Pages → Build and deployment → Source → GitHub Actions** y ejecutá **Publicar cuaderno en Pages** desde Actions. El workflow comprueba las reglas, prepara `dist/` y publica ese contenido. No necesita secretos propios.
+Para publicar con Actions, el workflow está preparado. Elegí **Settings → Pages → Build and deployment → Source → GitHub Actions** y ejecutá **Publicar cuaderno en Pages** desde Actions. El workflow comprueba las reglas, prepara `dist/` y publica ese contenido. No necesita secretos propios.
 
 La publicación depende de activar esa configuración; no se considera desplegada solo por tener el workflow.
 
 ## Cómo seguir
 
-Scope tiene su lugar en la navegación y queda pendiente de definir. Para sumar un prototipo, se agrega su ficha en [web/data/stages.js](web/data/stages.js), el programa de PuzzleScript y el texto Markdown en [web/research](web/research). [scripts/generate-prototypes.mjs](scripts/generate-prototypes.mjs) conserva la generación de las siete pruebas actuales.
+El [scope](web/research/scope.md) fija una campaña de ocho niveles por producir, con una estimación de 24 horas de trabajo y 6 de margen. Define los elementos, el proceso de cada conjunto, sus interacciones y el orden de producción. La entrega de scope cierra el 18 de octubre de 2026; ese plazo no es la fecha de entrega del juego terminado. Para sumar un prototipo, se agrega su ficha en [web/data/stages.js](web/data/stages.js), el programa de PuzzleScript y el texto Markdown en [web/research](web/research). [scripts/generate-prototypes.mjs](scripts/generate-prototypes.mjs) conserva la generación de las ocho pruebas actuales.
 
 Las reconstrucciones se implementaron en octubre de 2026 a partir de la entrega y la devolución. No son un registro de ejecuciones realizadas en septiembre. Los chats privados migrados y sus adjuntos no forman parte de este repositorio.
 

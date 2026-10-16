@@ -2,8 +2,19 @@ import {stages} from './data/stages.js';
 import {markdown} from './markdown.js';
 const $=id=>document.getElementById(id);
 let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, theme='observatory';
-let boardState=null, actions=0, sourceText='', sequence=0, verification={results:[]}, completed=new Set();
+let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, verification={results:[]}, completed=new Set();
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
+function applyAppearance(value){
+ document.documentElement.dataset.appearance=value;
+ document.querySelectorAll('[data-appearance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appearance===value)));
+ document.querySelector('meta[name="theme-color"]').content=value==='dark'?'#151c1a':'#f7f5ef';
+}
+const systemAppearance=matchMedia('(prefers-color-scheme: dark)');
+applyAppearance(document.documentElement.dataset.appearance||(systemAppearance.matches?'dark':'light'));
+document.querySelectorAll('[data-appearance]').forEach(button=>button.onclick=()=>{
+ const value=button.dataset.appearance;applyAppearance(value);try{localStorage.setItem('pasos-appearance',value);}catch{}
+});
+systemAppearance.addEventListener('change',event=>{try{if(localStorage.getItem('pasos-appearance'))return;}catch{}applyAppearance(event.matches?'dark':'light');});
 const canvas=$('board'),ctx=canvas.getContext('2d');
 document.querySelector('.skip').onclick=e=>{e.preventDefault();$('content').focus();};
 const same=(a,b)=>a.objects.join(',')===b.objects.join(',');
@@ -36,7 +47,7 @@ async function loadStage(){
  $('level-select').innerHTML=selected.levels.map((label,i)=>`<option value="${i}">${String(i+1).padStart(2,'0')} · ${label}</option>`).join('');
  $('level-select').value=String(levelIndex);
  $('pulse').hidden=!selected.shadow;$('shadow-legend').hidden=!selected.shadow;
- $('theme-toggle').hidden=!selected.compare;
+ $('theme-toggle').hidden=!selected.compare;$('gate-legend').hidden=!selected.gate;
  theme=selected.theme;
  document.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active',b.dataset.theme===theme));
  $('solution').hidden=true;$('solution-toggle').setAttribute('aria-expanded','false');
@@ -47,7 +58,7 @@ async function loadStage(){
   if(ticket!==sequence)return;
   sourceText=code;$('source-code').textContent=code;$('download-source').href=`./prototipos/${selected.id}.puzzlescript`;
   $('research').innerHTML=markdown(research);
-  boardState=PuzzleLab.load(code,levelIndex);actions=0;update();
+  boardState=PuzzleLab.load(code,levelIndex);initialShadows=count('shadoweast')+count('shadowwest');actions=0;update();
  }catch(error){if(ticket!==sequence)return;$('status-title').textContent=error.message;$('engine-state').textContent='No se pudo cargar la demo';$('board-message').textContent='No pude preparar el tablero. Recargá para volver a intentar.';$('board-message').hidden=false;}
 }
 function update(){
@@ -55,7 +66,8 @@ function update(){
  const dark=count('dark'),lit=count('light'),player=boardState.cells.find(c=>c.names.includes('player'));
  const trapped=!boardState.won&&player?.names.includes('trapped');
  const shadows=count('shadoweast')+count('shadowwest');
- $('status-title').textContent=boardState.won?'Constelación completa':trapped?'Este camino quedó cerrado':selected.shadow&&!shadows?'La Sombra se disipó':'El recorrido sigue';
+ $('pulse').hidden=!initialShadows;$('shadow-legend').hidden=!initialShadows;
+ $('status-title').textContent=boardState.won?'Constelación completa':trapped?'Este camino quedó cerrado':initialShadows&&!shadows?'La Sombra se disipó':'El recorrido sigue';
  $('status-count').textContent=`${lit} / ${lit+dark} iluminadas`;
  $('turn-count').textContent=`${actions} ${actions===1?'acción':'acciones'}`;
  $('status-dot').classList.toggle('warn',trapped);
@@ -98,6 +110,8 @@ function draw(){
   ctx.fillStyle=lit?'#ffedb3':obs?'#697fa2':'#868372';ctx.beginPath();ctx.arc(x+s/2,y+s/2,lit?2.3:1.8,0,Math.PI*2);ctx.fill();
   if(obs&&lit){ctx.strokeStyle='#ffebbb44';ctx.beginPath();ctx.moveTo(x+s/2-7,y+s/2);ctx.lineTo(x+s/2+7,y+s/2);ctx.moveTo(x+s/2,y+s/2-7);ctx.lineTo(x+s/2,y+s/2+7);ctx.stroke();}
   const cx=x+s/2,cy=y+s/2;
+  if(cell.names.includes('rune')){ctx.strokeStyle='#9ce7d1';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,cy-14);ctx.lineTo(cx+12,cy);ctx.lineTo(cx,cy+14);ctx.lineTo(cx-12,cy);ctx.closePath();ctx.stroke();}
+  if(cell.names.includes('gateclosed')||cell.names.includes('gateopen')){const closed=cell.names.includes('gateclosed');ctx.strokeStyle=closed?'#e8b998':'#9ce7d1';ctx.lineWidth=3;ctx.strokeRect(x+9,y+8,s-18,s-16);if(closed){for(let t=-1;t<=1;t++){ctx.beginPath();ctx.moveTo(cx+t*9,y+10);ctx.lineTo(cx+t*9,y+s-10);ctx.stroke();}}}
   if(cell.names.some(n=>n.startsWith('shadow'))){
    ctx.shadowColor='#a284ff';ctx.shadowBlur=22;ctx.fillStyle='#8d73bf';ctx.beginPath();ctx.moveTo(cx,cy-17);ctx.bezierCurveTo(cx+15,cy-13,cx+17,cy+8,cx+12,cy+18);ctx.lineTo(cx+5,cy+12);ctx.lineTo(cx,cy+19);ctx.lineTo(cx-6,cy+12);ctx.lineTo(cx-13,cy+18);ctx.bezierCurveTo(cx-17,cy+7,cx-14,cy-13,cx,cy-17);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#dfd2ff';ctx.fillRect(cx-7,cy-3,4,4);ctx.fillRect(cx+3,cy-3,4,4);
   }
@@ -126,7 +140,7 @@ window.addEventListener('keydown',e=>{
  if(e.altKey||e.metaKey||e.ctrlKey||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||section!=='prototipado')return;
  if(view==='research'&&e.target!==canvas)return;
  if(e.key===' '&&e.target.tagName==='BUTTON')return;
- const keys={ArrowUp:0,w:0,W:0,ArrowLeft:1,a:1,A:1,ArrowDown:2,s:2,S:2,ArrowRight:3,d:3,D:3,' ':4};
+ const keys={ArrowUp:0,w:0,W:0,ArrowLeft:1,a:1,A:1,ArrowDown:2,s:2,S:2,ArrowRight:3,d:3,D:3,' ':4,x:4,X:4};
  if(e.key in keys){e.preventDefault();if(!e.repeat)input(keys[e.key]);}
  if(e.key.toLowerCase()==='r')$('restart').click();if(e.key.toLowerCase()==='z')$('undo').click();
 });
@@ -139,4 +153,6 @@ function readRoute(){
 }
 window.addEventListener('hashchange',readRoute);new ResizeObserver(draw).observe(canvas);
 fetch('./data/verification.json').then(r=>r.ok?r.json():Promise.reject()).then(data=>verification=data).catch(()=>{});
+fetch('./research/scope.md').then(r=>{if(!r.ok)throw new Error();return r.text();}).then(text=>{$('scope-content').innerHTML=markdown(text);}).catch(()=>{$('scope-content').textContent='No pude cargar el scope. Recargá la página para volver a intentar.';});
+fetch('./data/scope.json').then(r=>r.json()).then(data=>{if(data.documentUrl){$('scope-drive').href=data.documentUrl;$('scope-drive').hidden=false;}}).catch(()=>{});
 readRoute();

@@ -145,6 +145,37 @@
       "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
       "states": 83,
       "verified": true
+    },
+    {
+      "id": "08-compuertas",
+      "level": 0,
+      "inputs": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → →",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "08-compuertas",
+      "level": 1,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        4,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
+      "states": 46,
+      "verified": true
     }
   ]
 }

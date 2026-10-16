@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { engine, source, at } from './engine-helper.mjs';
 const ids=['01-luz','02-victoria','03-recorrido','04-encierro','05-sombra','06-contexto','07-feedback'];
@@ -45,4 +46,21 @@ test('la Sombra se mueve por oscuridad; golpear una pared no le regala un turno'
 });
 test('en el pasillo, la Sombra no provoca una colisión simultánea que impida acercarse',()=>{
  const e=engine();e.load(source('05-sombra'));for(const d of [3,3,3,4,3])e.input(d);assert(e.snapshot().won);
+});
+test('compuerta: bloquea antes del sello y abrirla no ilumina su piso',()=>{
+ const e=engine();const code=source('08-compuertas').replace(/(LEVELS\n=======\n\n)[\s\S]*/, '$1#####\n#PG.#\n#..K#\n#####\n');
+ let s=e.load(code);assert.deepEqual(Array.from(s.errors),[]);
+ const before=s.objects;s=e.input(3);assert.deepEqual(s.objects,before);
+ for(const d of [2,3])e.input(d);
+ s=e.input(3);assert.equal(at(s,'gateclosed').length,0);assert.equal(at(s,'gateopen').length,1);
+ assert(at(s,'gateopen')[0].names.includes('dark'));assert(at(s,'rune')[0].names.includes('light'));assert(!s.won);
+ s=e.undo();assert.equal(at(s,'gateclosed').length,1);assert(at(s,'rune')[0].names.includes('dark'));
+ for(const d of [3,0,1])e.input(d);assert(e.snapshot().won);
+ s=e.restart();assert.equal(at(s,'gateclosed').length,1);assert.equal(at(s,'gateopen').length,0);
+});
+test('sellos y compuertas: todos los casos combinados compilan y admiten victoria',()=>{
+ const e=engine();const code=source('08-compuertas');assert.deepEqual(Array.from(e.load(code).errors),[]);
+ const solutions=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results.filter(r=>r.id==='08-compuertas');
+ assert.equal(solutions.length,2);
+ for(const result of solutions){e.load(code,result.level);for(const input of result.inputs)e.input(input);assert(e.snapshot().won);assert.equal(at(e.snapshot(),'dark').length,0);}
 });

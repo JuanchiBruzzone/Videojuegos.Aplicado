@@ -133,6 +133,7 @@ export const specifications = [
  {id:'04-encierro',name:'Cuando me encierro',blocked:true,win:true,trap:true,shade:false,boards:[board]},
  {id:'05-sombra',name:'La Sombra y el Pulso',blocked:true,win:true,trap:true,shade:true,boards:[corridor,shadeBoard]},
  {id:'06-contexto',name:'Del dungeon al observatorio',blocked:true,win:true,trap:true,shade:true,boards:[shadeBoard]},
+ {id:'08-compuertas',name:'Sellos y compuertas',blocked:true,win:true,trap:true,shade:true,gate:true,boards:[`#######\n#PKG..#\n#######`,`#####\n#P.S#\n#..G#\n#K..#\n#####`]},
  {id:'07-feedback',name:'La última casilla',blocked:true,win:true,trap:true,shade:true,boards:[finalTile,corridor,shadeBoard]},
 ];
 await mkdir('web/prototipos',{recursive:true});
@@ -140,14 +141,16 @@ for (const s of specifications) {
  let rules = s.shade ? pulse : '[ action Player ] -> [ Player ]\n';
  rules += '[ moving Player ] -> [ moving Player Trail ]\n';
  if (s.blocked) rules += block;
+ if (s.gate) rules += '[ > Player | GateClosed ] -> [ Player | GateClosed ]\n';
  if (s.shade) rules += shadow;
  rules += `late [ Player Trail ] -> cancel
 late [ Trail ] -> [ ]
 late [ Pulse ] -> [ ]
 late [ Player Dark ] -> [ Player Light ]
 `;
- if(s.trap) rules += trapped;
- const source = `title Pasos de Luz - ${s.name}\n`+base+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.join('\n\n')+'\n';
+ if(s.gate) rules += 'late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]\n';
+ if(s.trap) rules += s.gate?trapped.replaceAll('| Dark ]','| Dark no GateClosed ]'):trapped;
+ const source = `title Pasos de Luz - ${s.name}\n`+(s.gate?base.replace('=======\nLEGEND',`GateClosed\n#e8b998\n00000\n0.0.0\n0.0.0\n0.0.0\n00000\n\nGateOpen\n#9ce7d1\n00000\n0...0\n0...0\n0...0\n00000\n\nRune\n#9ce7d1\n..0..\n.0.0.\n0...0\n.0.0.\n..0..\n\n=======\nLEGEND`).replace('Barrier = Wall or Light','K = Rune and Dark\nG = GateClosed and Dark\nBarrier = Wall or Light or GateClosed').replace('Player, Wall, ShadowEast, ShadowWest','Player, Wall, ShadowEast, ShadowWest, GateClosed\nGateOpen\nRune'):base)+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.join('\n\n')+'\n';
  await writeFile(`web/prototipos/${s.id}.puzzlescript`,source);
 }
-console.log('Siete prototipos de PuzzleScript generados.');
+console.log('Ocho prototipos de PuzzleScript generados.');

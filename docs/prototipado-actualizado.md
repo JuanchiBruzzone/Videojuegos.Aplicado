@@ -90,3 +90,9 @@ Con Pulso pude cerrar esa parte sin cambiar el objetivo de iluminar todo. Inclus
 
 La idea central se mantiene: cada paso recupera luz y también cierra una posibilidad de regreso. Con estas pruebas implementadas, puedo pasar al scope y decidir cuánto de esta idea voy a desarrollar para la entrega.
 
+
+## Ampliación durante el scope: sellos y compuertas
+
+Para sumar una variación sin cambiar la regla central, agregué un sello que abre una compuerta al pisarlo. La compuerta queda abierta, pero su piso sigue oscuro hasta recorrerlo. Cada sala puede tener como máximo un sello y una compuerta.
+
+Probé un pasillo para aislar la apertura y otra sala que la combina con la Sombra. Los dos casos tienen solución encontrada y reproducida en el motor oficial. La web reúne ocho estudios y once casos con victoria, además de la primera prueba libre. Los ocho niveles de la campaña siguen pendientes de producción.

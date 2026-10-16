@@ -1,0 +1,162 @@
+title Pasos de Luz - Sellos y compuertas
+author Juan Ignacio Bruzzone
+homepage github.com/JuanchiBruzzone/Videojuegos.Aplicado
+background_color #090d18
+text_color #f4dea3
+
+========
+OBJECTS
+========
+
+Background
+#090d18
+
+Dark
+#1c2940 #33425e
+11111
+10001
+10001
+10001
+11111
+
+Light
+#f4c974 #72572f
+11111
+10001
+10001
+10001
+11111
+
+Wall
+#131b2b
+
+Player
+#ecf8ff #90dcff
+..0..
+.000.
+00100
+.111.
+1...1
+
+ShadowEast
+#a38aff #432b72
+..0..
+.010.
+01110
+01110
+1.1.1
+
+ShadowWest
+#a38aff #432b72
+..0..
+.010.
+01110
+01110
+1.1.1
+
+Trail
+transparent
+
+Pulse
+transparent
+
+Trapped
+transparent
+
+GateClosed
+#e8b998
+00000
+0.0.0
+0.0.0
+0.0.0
+00000
+
+GateOpen
+#9ce7d1
+00000
+0...0
+0...0
+0...0
+00000
+
+Rune
+#9ce7d1
+..0..
+.0.0.
+0...0
+.0.0.
+..0..
+
+=======
+LEGEND
+=======
+
+. = Dark
+# = Wall
+P = Player and Light
+S = ShadowEast and Dark
+W = ShadowWest and Dark
+Shade = ShadowEast or ShadowWest
+K = Rune and Dark
+G = GateClosed and Dark
+Barrier = Wall or Light or GateClosed
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Dark, Light
+Player, Wall, ShadowEast, ShadowWest, GateClosed
+GateOpen
+Rune
+Trail
+Pulse
+Trapped
+
+======
+RULES
+======
+[ action Player | Shade ] -> [ Player Pulse | ]
+[ action Player ] -> [ Player ]
+[ moving Player ] -> [ moving Player Trail ]
+[ > Player | Light ] -> [ Player | Light ]
+[ > Player | GateClosed ] -> [ Player | GateClosed ]
+[ > Player | Shade ] -> [ Player | Shade ]
+[ moving Player ] [ ShadowEast ] -> [ moving Player ] [ right ShadowEast ]
+[ moving Player ] [ ShadowWest ] -> [ moving Player ] [ left ShadowWest ]
+right [ right ShadowEast | Barrier ] -> [ left ShadowWest | Barrier ]
+left [ left ShadowWest | Barrier ] -> [ right ShadowEast | Barrier ]
+[ > Shade | Barrier ] -> [ Shade | Barrier ]
+[ > Player | | < Shade ] -> [ > Player | | Shade ]
+late [ Player Trail ] -> cancel
+late [ Trail ] -> [ ]
+late [ Pulse ] -> [ ]
+late [ Player Dark ] -> [ Player Light ]
+late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]
+late [ Player ] -> [ Player Trapped ]
+late [ Player | Dark no GateClosed ] -> [ Player no Trapped | Dark no GateClosed ]
+
+==============
+WINCONDITIONS
+==============
+
+no Dark
+
+=======
+LEVELS
+=======
+
+#######
+#PKG..#
+#######
+
+#####
+#P.S#
+#..G#
+#K..#
+#####
