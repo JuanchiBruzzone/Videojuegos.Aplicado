@@ -1,19 +1,7 @@
-# ¿Por qué ilumino este lugar?
+# Un observatorio apagado
 
-El dungeon me sirvió para empezar. Tenía oscuridad y una salida, pero explicaba poco por qué debía recorrer cada espacio sin volver atrás.
+Cada nivel representa una constelación que recupera su luz con el recorrido. Las Sombras ocupan los fragmentos que todavía están apagados.
 
-## La comparación
+Probé el mismo tablero con dos ambientaciones. El selector cambia entre dungeon y observatorio sin reiniciar la partida, para comparar cómo se lee el escenario.
 
-En el observatorio, el recorrido vuelve a conectar una constelación apagada. Cada casilla iluminada queda restaurada y el jugador sigue hacia los fragmentos que faltan.
-
-La Sombra ocupa los lugares que todavía no recuperaron su luz. El Pulso la disipa; caminar completa la restauración.
-
-## Qué probé acá
-
-El selector **Dungeon / Observatorio** cambia la presentación del mismo tablero. Conserva la posición del jugador, las casillas iluminadas y la Sombra. Así puedo comparar la lectura visual sin cambiar de puzzle.
-
-## Qué quedó
-
-La ambientación acompaña la regla central: avanzar recupera luz y también cierra el regreso.
-
-**Decisión:** mantener el observatorio para Pasos de Luz. El dungeon queda como referencia del punto de partida.
+Me quedo con el observatorio: el recorrido completo tiene sentido como forma de restaurar la constelación.

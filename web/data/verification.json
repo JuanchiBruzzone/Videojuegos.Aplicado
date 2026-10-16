@@ -176,6 +176,324 @@
       "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
       "states": 46,
       "verified": true
+    },
+    {
+      "id": "09-teleporter",
+      "level": 0,
+      "inputs": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → →",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "09-teleporter",
+      "level": 1,
+      "inputs": [
+        3,
+        3,
+        3,
+        4,
+        3,
+        3
+      ],
+      "solution": "→ → → Pulso → →",
+      "states": 6,
+      "verified": true
+    },
+    {
+      "id": "10-piso-negro",
+      "level": 0,
+      "inputs": [
+        2,
+        2,
+        3,
+        3,
+        0,
+        0,
+        1
+      ],
+      "solution": "↓ ↓ → → ↑ ↑ ←",
+      "states": 13,
+      "verified": true
+    },
+    {
+      "id": "10-piso-negro",
+      "level": 1,
+      "inputs": [
+        3,
+        3,
+        2,
+        2,
+        1,
+        1,
+        0,
+        3,
+        3
+      ],
+      "solution": "→ → ↓ ↓ ← ← ↑ → →",
+      "states": 12,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 0,
+      "inputs": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → →",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 1,
+      "inputs": [
+        3,
+        3,
+        2,
+        2
+      ],
+      "solution": "→ → ↓ ↓",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 2,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ → ↓ ↓",
+      "states": 71,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 3,
+      "inputs": [
+        4,
+        3
+      ],
+      "solution": "Pulso →",
+      "states": 2,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 4,
+      "inputs": [
+        3,
+        3,
+        3,
+        4,
+        3
+      ],
+      "solution": "→ → → Pulso →",
+      "states": 5,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 5,
+      "inputs": [
+        4,
+        3,
+        3,
+        3,
+        4,
+        3,
+        3
+      ],
+      "solution": "Pulso → → → Pulso → →",
+      "states": 7,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 6,
+      "inputs": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → →",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 7,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        4,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
+      "states": 46,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 8,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        3,
+        4,
+        2,
+        3,
+        0,
+        0,
+        1,
+        1
+      ],
+      "solution": "↓ ↓ → ↑ → Pulso ↓ → ↑ ↑ ← ←",
+      "states": 227,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 9,
+      "inputs": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → →",
+      "states": 4,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 10,
+      "inputs": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "solution": "→ → → → →",
+      "states": 5,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 11,
+      "inputs": [
+        3,
+        3,
+        3,
+        3,
+        4,
+        3,
+        4,
+        3
+      ],
+      "solution": "→ → → → Pulso → Pulso →",
+      "states": 8,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 12,
+      "inputs": [
+        2,
+        2,
+        3,
+        3,
+        0,
+        0,
+        1
+      ],
+      "solution": "↓ ↓ → → ↑ ↑ ←",
+      "states": 13,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 13,
+      "inputs": [
+        3,
+        3,
+        2,
+        2,
+        1,
+        1,
+        0,
+        3,
+        3
+      ],
+      "solution": "→ → ↓ ↓ ← ← ↑ → →",
+      "states": 12,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 14,
+      "inputs": [
+        3,
+        3,
+        2,
+        2,
+        1,
+        4,
+        1,
+        0,
+        4,
+        3,
+        3
+      ],
+      "solution": "→ → ↓ ↓ ← Pulso ← ↑ Pulso → →",
+      "states": 15,
+      "verified": true
+    },
+    {
+      "id": "11-progresion",
+      "level": 15,
+      "inputs": [
+        3,
+        3,
+        2,
+        2,
+        1,
+        4,
+        1,
+        0,
+        3,
+        4,
+        3,
+        4,
+        3
+      ],
+      "solution": "→ → ↓ ↓ ← Pulso ← ↑ → Pulso → Pulso →",
+      "states": 19,
+      "verified": true
     }
   ]
 }

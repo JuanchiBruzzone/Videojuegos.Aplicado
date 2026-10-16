@@ -64,3 +64,37 @@ test('sellos y compuertas: todos los casos combinados compilan y admiten victori
  assert.equal(solutions.length,2);
  for(const result of solutions){e.load(code,result.level);for(const input of result.inputs)e.input(input);assert(e.snapshot().won);assert.equal(at(e.snapshot(),'dark').length,0);}
 });
+test('teleporter: pinta A y B, conserva el viaje al deshacer y permite completar ambos sectores',()=>{
+ const e=engine();e.load(source('09-teleporter'));e.input(3);const before=e.snapshot();const s=e.input(3);
+ assert.deepEqual(Array.from(s.errors),[]);assert.equal(at(s,'player')[0].x,5);
+ assert(at(s,'portalin')[0].names.includes('light'));assert(at(s,'portalout')[0].names.includes('light'));
+ assert.equal(at(s,'dark').length,2);assert.deepEqual(e.undo().objects,before.objects);
+ e.input(3);e.input(3);assert(e.input(3).won);
+ assert.equal(at(e.restart(),'player')[0].x,1);
+});
+test('teleporter: una salida ocupada o pintada cancela el paso y la patrulla',()=>{
+ const code=source('09-teleporter');
+ for(const [extra,board] of [['','#######\n#PA#BS#\n#######'],['C = PortalOut and Light\n','#######\n#PA#C.#\n#######']]){
+  const fixture=code.replace('A = PortalIn and Dark',extra+'A = PortalIn and Dark').replace(/(LEVELS\n=======\n\n)[\s\S]*/,'$1'+board+'\n');
+  const e=engine(),s=e.load(fixture);assert.deepEqual(Array.from(s.errors),[]);assert.deepEqual(e.input(3).objects,s.objects);
+ }
+});
+test('el piso negro bloquea el paso y queda fuera de la cuenta de pintura',()=>{
+ const e=engine(),s=e.load(source('10-piso-negro'));assert.equal(at(s,'void').length,1);assert.equal(at(s,'dark').length,7);
+ e.input(3);const before=e.snapshot();assert.deepEqual(e.input(2).objects,before.objects);assert(!at(e.snapshot(),'void')[0].names.includes('dark'));
+});
+test('Pulso disipa todas las Sombras vecinas sin pintar sus casillas',()=>{
+ const fixture=source('11-progresion').replace(/(LEVELS\n=======\n\n)[\s\S]*/,'$1#####\n#.S.#\n#SP.#\n#####\n');
+ const e=engine(),s=e.load(fixture);assert.deepEqual(Array.from(s.errors),[]);assert.deepEqual(e.input(0).objects,s.objects);
+ const cleared=e.input(4);assert.equal(at(cleared,'shadoweast').length+at(cleared,'shadowwest').length,0);assert.equal(at(cleared,'dark').length,at(s,'dark').length);
+});
+test('la progresión tiene 16 salas; introduce reglas y llega a tres Sombras sin perder soluciones',()=>{
+ const e=engine(),code=source('11-progresion');assert.equal(e.load(code).levels,16);
+ assert.equal(at(e.load(code,0),'shadoweast').length,0);assert.equal(at(e.load(code,3),'shadoweast').length,1);
+ assert.equal(at(e.load(code,5),'shadoweast').length,2);assert.equal(at(e.load(code,6),'rune').length,1);
+ assert.equal(at(e.load(code,9),'portalin').length,1);assert.equal(at(e.load(code,12),'void').length,1);
+ const last=e.load(code,15);assert.equal(at(last,'shadoweast').length+at(last,'shadowwest').length,3);
+ const results=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results;
+ const campaign=results.filter(r=>r.id==='11-progresion');assert.equal(campaign.length,16);
+ for(const result of results.filter(r=>['09-teleporter','10-piso-negro','11-progresion'].includes(r.id))){e.load(source(result.id),result.level);for(const d of result.inputs)e.input(d);assert(e.snapshot().won);assert.equal(at(e.snapshot(),'dark').length,0);}
+});

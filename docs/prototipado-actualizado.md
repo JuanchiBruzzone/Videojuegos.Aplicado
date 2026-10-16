@@ -2,97 +2,137 @@
 
 Juan Ignacio Bruzzone · Diseño de Juegos Aplicado
 
-Actualización: 15 de octubre de 2026.
+## Qué probé
 
-## Objetivo
+Separé las preguntas del juego en pruebas cortas: pintar el piso, completar el tablero, bloquear el regreso, reconocer un encierro y despejar el paso con Pulso. Después sumé compuertas, teleporter y piso negro fijo, y armé una secuencia de niveles para probar cómo se aprenden.
 
-Quise comprobar si el recorrido de Pasos de Luz podía sostener el juego antes de seguir sumándole sistemas. La idea es avanzar por casillas oscuras, iluminarlas al pasar y completar todo el tablero sin quedar encerrado.
+## Pintar el recorrido
 
-Después de la devolución del profesor, volví a llevar cada duda a una prueba jugable. Esta actualización recoge esa reconstrucción, realizada el 15 de octubre de 2026, y cierra la interacción que faltaba explicar entre la Sombra y la última casilla.
+La primera prueba tiene solo al personaje y el piso. Cada casilla que piso pasa de oscura a iluminada; el punto de partida ya está pintado.
 
-## 1. Cambio de luz al moverme
+```puzzlescript
+late [ Player Dark ] -> [ Player Light ]
+```
 
-Arranqué con un tablero chico y dejé al jugador volver libremente sobre las casillas iluminadas. En esta primera prueba quería mirar el cambio del piso, sin mezclarlo todavía con la dificultad del recorrido.
+En esta prueba puedo volver atrás. Así compruebo el cambio de color antes de agregar la restricción del recorrido.
 
-Separé Background, el piso y el jugador en capas distintas. Background queda como base permanente; Dark representa el piso oscuro y Light el iluminado. Así el jugador puede ocupar una casilla mientras cambia el estado del piso.
+## Completar el tablero
 
-La transformación se aplica con late: primero termina el movimiento y después la casilla de llegada pasa de Dark a Light. Comprobé que se ilumina la nueva posición y que la capa Background se conserva en todo el tablero.
+El objetivo es pintar todas las casillas transitables. No hace falta llegar a una salida: gano cuando no queda piso oscuro.
 
-Resultado: mantuve el cambio después del movimiento. La casilla inicial ya empieza iluminada.
+```puzzlescript
+no Dark
+```
 
-## 2. Condición de victoria
+Uso `Dark` para las casillas pendientes. `Background` es la base del tablero y no cambia. El piso negro fijo, que aparece más adelante, no lleva `Dark` y no cuenta para ganar.
 
-En vez de agregar una puerta de salida, hice que la victoria dependiera del estado del tablero. Si todavía queda una casilla Dark, el recorrido no está completo. Cuando no queda ninguna, el nivel termina.
+## No puedo volver por la luz
 
-Acá corregí una afirmación de la entrega anterior: había escrito no Background. En la implementación, Background es una capa obligatoria y no desaparece. La condición que uso y comprobé en el motor es no Dark.
+Si pudiera volver por cualquier casilla, completar el tablero sería casi automático. Al bloquear el piso pintado, el orden de los pasos pasa a importar.
 
-Resultado: mantuve la victoria por iluminación total. Encontré y reproduje un recorrido que completa el tablero sin una salida aparte.
+```puzzlescript
+[ > Player | Light ] -> [ Player | Light ]
+```
 
-## 3. Volver a pisar una casilla iluminada
+Intentar entrar en una casilla iluminada no cambia el tablero. Compará esta prueba con la primera: ahora un desvío puede dejar una parte sin alcanzar.
 
-Comparé la primera prueba, donde podía volver atrás, con otra que bloquea la entrada en Light. En la primera podía corregir el recorrido con mucha facilidad. En la segunda, cada paso modifica las opciones que me quedan.
+## Equivocarse y volver a probar
 
-La regla detecta el intento de entrar en una casilla iluminada y detiene el movimiento. Si el jugador sigue en el mismo lugar, se cancela el turno completo. Eso también evita que una acción bloqueada cambie otros elementos del tablero.
+Un camino puede dejar casillas pendientes sin forma de llegar a ellas. Cuando pasa, el tablero queda visible para revisar el error.
 
-Resultado: mantuve el bloqueo de las casillas iluminadas. Las dos versiones quedan disponibles en la web para comparar la diferencia.
+**Z** deshace el último paso y **R** reinicia el nivel. También están los botones debajo del juego.
 
-## 4. Condición de derrota
+La señal de encierro detecta si falta pintar y no queda una casilla oscura vecina. Una Sombra vecina permite usar Pulso; por eso no la tomo como un cierre del camino.
 
-Probé un recorrido que deja cuatro casillas oscuras y encierra al jugador. El tablero reconoce que no hay una casilla oscura vecina a la que se pueda seguir, pero conserva la escena para que se vea dónde estuvo el error.
+No hace falta borrar el intento apenas sale mal. Poder mirar y corregir el recorrido forma parte del puzzle.
 
-Preferí mostrar ese encierro y dejar disponibles Deshacer y Reiniciar. Comprobé que deshacer recupera el paso anterior y que reiniciar vuelve al tablero inicial. La victoria se comprueba primero: quedarse sin movimientos después de iluminar todo significa ganar.
+## La Sombra ocupa el camino
 
-Cuando hay una Sombra vecina, todavía existe una acción posible: usar Pulso. Por eso una casilla oscura ocupada por la Sombra no se trata automáticamente como una derrota.
+Las Sombras patrullan en horizontal cada vez que doy un paso válido. La luz y las paredes les cierran el paso. No se mueven mientras pienso ni por chocar contra un obstáculo.
 
-Resultado: mantuve el reinicio manual y una señal de encierro, sin borrar de inmediato el intento.
+Para despejar una casilla, tengo que acercarme y usar **Pulso con X, Espacio o el botón**. Disipa las Sombras que estén arriba, abajo, a la izquierda o a la derecha. No pinta el piso: después tengo que caminar sobre él.
 
-## 5. Entrada del enemigo
+La primera presentación usa una Sombra. Más adelante aparecen dos y finalmente tres. Cambia la cantidad de posiciones que tengo que mirar, no los controles.
 
-La devolución del profesor señaló el punto que faltaba cerrar: si la Sombra ocupa oscuridad y yo tengo que iluminar todo, ¿cómo recupero su casilla, especialmente si es la última?
+## Un observatorio apagado
 
-Definí una regla concreta para esta versión. La Sombra patrulla en horizontal después de un movimiento válido del jugador. Cambia de dirección o se detiene ante paredes y casillas iluminadas. No puede ocupar luz ni entrar en el jugador. Intentar caminar directamente hacia ella bloquea el paso.
+Cada nivel representa una constelación que recupera su luz con el recorrido. Las Sombras ocupan los fragmentos que todavía están apagados.
 
-Agregué Pulso como acción, con Espacio o el botón de la web. Si la Sombra está en una casilla vecina, arriba, abajo, a la izquierda o a la derecha, el Pulso la disipa. El jugador no se mueve y el piso todavía queda oscuro. Recién al entrar en ese espacio lo ilumina.
+Probé el mismo tablero con dos ambientaciones. El selector cambia entre dungeon y observatorio sin reiniciar la partida, para comparar cómo se lee el escenario.
 
-La prueba mínima tiene dos casillas: el jugador empieza en una iluminada y la Sombra ocupa la única oscura. Primero intenté avanzar y comprobé el bloqueo. Después usé Pulso: la Sombra desapareció, pero el nivel todavía no estaba ganado. Al avanzar una vez más se iluminó la última casilla y se completó el nivel.
+Me quedo con el observatorio: el recorrido completo tiene sentido como forma de restaurar la constelación.
 
-También probé la regla en un pasillo con patrulla y en una sala completa. Comprobé que un Pulso lejano no quite la Sombra, que golpear una pared no le dé un turno extra y que la patrulla no impida acercarme por una colisión simultánea.
+## El feedback: la última casilla
 
-Resultado: mantengo la Sombra como una presión secundaria y Pulso como la forma de despejarla. Esta versión usa una Sombra por nivel, sin persecución en tiempo real ni un recurso consumible para el Pulso.
+El feedback señaló una duda: si una Sombra ocupa la última casilla oscura, ¿cómo completo el nivel?
 
-## 6. Ambientación, premisa y narrativa
+| Acción | Qué pasa |
+| --- | --- |
+| Intento entrar | La Sombra bloquea el paso |
+| Uso Pulso desde al lado | La Sombra desaparece; el piso sigue oscuro |
+| Entro en la casilla | Se pinta y completo el nivel |
 
-El dungeon fue útil para empezar, pero explicaba poco por qué tenía que iluminar cada espacio y por qué no podía volver por el camino recorrido.
+El primer caso deja solamente esas dos casillas. Los otros prueban el acercamiento en un pasillo y en una sala.
 
-Mantuve la reformulación del observatorio abandonado. Cada nivel representa una constelación apagada: caminar vuelve a conectar sus fragmentos, y las partes restauradas quedan fuera del recorrido que todavía puedo hacer. La Sombra ocupa los lugares que no recuperaron su luz.
+Pulso resuelve el bloqueo sin cambiar el objetivo de pintar todo.
 
-En la sexta prueba agregué un selector para ver el mismo tablero como dungeon u observatorio. Cambia la presentación y conserva la posición del jugador, la luz y la Sombra. Así puedo comparar la lectura visual sin cambiar el puzzle.
+## Un sello abre el paso
 
-Resultado: mantuve el observatorio para Pasos de Luz. El dungeon queda como referencia del punto de partida.
+Al pisar el sello verde, se abre la compuerta. Queda abierta hasta deshacer o reiniciar. Su piso también hay que pintarlo.
 
-## Resultado final del prototipado
+El primer caso permite ver esa relación sin Sombras. El segundo combina la apertura con una patrulla.
 
-Las seis dudas originales tienen ahora una prueba jugable y su explicación en Research. Agregué una séptima etapa dedicada a la devolución del profesor, con tres casos: la última casilla ocupada, el acercamiento en un pasillo y una constelación completa.
+```puzzlescript
+late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]
+```
 
-Los siete programas compilan en el motor oficial de PuzzleScript. Los nueve casos que tienen condición de victoria cuentan con un recorrido encontrado y reproducido en ese mismo motor. La primera etapa queda como una prueba libre del cambio de luz.
+En la progresión, la compuerta aparece después de aprender Pulso. Primero se muestra un sello y una puerta en un camino corto; después hay que decidir cuándo abrirla mientras se despejan las Sombras.
 
-La regla queda cerrada: el jugador ilumina las casillas al entrar y no puede volver sobre Light. Gana cuando no queda Dark. Si se encierra antes, puede deshacer o reiniciar. Si una Sombra ocupa el espacio que necesita, puede disiparla desde una casilla vecina con Pulso y después entrar para iluminarla.
+## Entrar por A, salir por B
 
-Implementación y pruebas jugables: https://github.com/JuanchiBruzzone/Videojuegos.Aplicado
+El teleporter conecta dos partes del tablero. Al pisar **A**, aparezco en **B** y quedan pintadas ambas casillas. Funciona en un solo sentido; no usa un botón aparte.
 
-La web conserva las etapas anteriores y permite leer la explicación junto al juego. Scope queda preparado como la siguiente parte del trabajo; todavía no definí allí niveles o sistemas nuevos.
+La salida tiene que estar libre y sin pintar. Si está ocupada por una Sombra o ya tiene luz, no puedo entrar en A. El intento no consume el turno.
 
-## Conclusión
+El primer caso separa el tablero en dos sectores: para seguir hay que usar el teleporter. El segundo suma una compuerta y una Sombra.
 
-El prototipado me permitió llevar cada duda a una prueba concreta y conservar las versiones para compararlas. La devolución del profesor me sirvió para detectar que la Sombra estaba explicada como idea, pero todavía dejaba una interacción sin resolver.
+En los niveles aparece después de las compuertas. Primero enseño el salto; después lo combino con las decisiones del recorrido. Hay que terminar el sector de entrada antes de dejarlo atrás.
 
-Con Pulso pude cerrar esa parte sin cambiar el objetivo de iluminar todo. Incluso si la Sombra ocupa la última casilla, puedo despejarla y completar el recorrido. La misma regla funciona en el caso mínimo y en los tableros completos que probé.
+## Piso negro fijo
 
-La idea central se mantiene: cada paso recupera luz y también cierra una posibilidad de regreso. Con estas pruebas implementadas, puedo pasar al scope y decidir cuánto de esta idea voy a desarrollar para la entrega.
+El piso negro no se puede pisar ni pintar. Tampoco cuenta para completar el nivel. Es distinto del piso azul oscuro, que sí se puede recorrer y todavía espera luz.
 
+La primera sala pone un bloque negro en el centro. Obliga a rodearlo y permite ver que la victoria no exige pintarlo. La siguiente combina ese desvío con el teleporter.
 
-## Ampliación durante el scope: sellos y compuertas
+En PuzzleScript uso un objeto separado, `Void`, en la capa de colisión. No lleva `Dark`, por lo que queda fuera de la cuenta de casillas pendientes.
 
-Para sumar una variación sin cambiar la regla central, agregué un sello que abre una compuerta al pisarlo. La compuerta queda abierta, pero su piso sigue oscuro hasta recorrerlo. Cada sala puede tener como máximo un sello y una compuerta.
+La forma del piso pasa a ser otra herramienta para diseñar los niveles: puedo cortar atajos y separar recorridos sin sumar una acción al jugador.
 
-Probé un pasillo para aislar la apertura y otra sala que la combina con la Sombra. Los dos casos tienen solución encontrada y reproducida en el motor oficial. La web reúne ocho estudios y once casos con victoria, además de la primera prueba libre. Los ocho niveles de la campaña siguen pendientes de producción.
+## Aprender jugando
+
+Armé un recorrido de **16 niveles jugables**. La dificultad sube al combinar reglas que ya aparecieron. Cada presentación tiene una indicación breve junto al tablero y una situación donde se ve qué cambia.
+
+| Niveles | Qué aprende el jugador | Cómo lo presento |
+| --- | --- | --- |
+| 1–3 | Pintar, no volver por la luz y corregir un recorrido | Un pasillo, un giro y una sala con varias opciones. Flechas para moverse; Z y R para probar otra vez |
+| 4–6 | Sombra y Pulso | Una Sombra al lado para probar X, una patrulla y después dos Sombras |
+| 7–9 | Sello y compuerta | Primero sin enemigos; después con una y dos Sombras |
+| 10–12 | Teleporter | Dos sectores conectados por A → B; después compuerta y Sombras en la misma sala |
+| 13–14 | Piso negro fijo | Un bloque que hay que rodear; después un recorrido que termina en un teleporter |
+| 15–16 | Elegir el orden con todo lo aprendido | Compuerta, teleporter y piso negro, primero con dos Sombras y después con tres |
+
+### Qué tiene que quedar claro
+
+- Pintar una casilla cierra el regreso. Un intento bloqueado no cambia el turno.
+- Pulso disipa las Sombras vecinas, pero todavía hay que pintar su piso.
+- El sello abre la compuerta; abrirla no pinta la casilla que ocupa.
+- A lleva a B en un sentido. Conviene terminar el sector antes de salir.
+- El piso negro es un obstáculo permanente, no una casilla pendiente.
+
+### Qué falta probar con jugadores
+
+Los 16 niveles tienen un recorrido encontrado y reproducido en PuzzleScript. Eso comprueba que se pueden completar, pero todavía falta ver si enseñan bien.
+
+Voy a mirar dónde alguien necesita una explicación, si descubre Pulso en su primera aparición y si entiende A → B antes de encontrarlo junto a una Sombra. Si un nivel confunde, cambio su disposición o su indicación antes de aumentar la dificultad.
+
+El mayor trabajo pendiente es ese: jugar, ajustar recorridos y volver a probarlos. El código de las reglas ya está funcionando.

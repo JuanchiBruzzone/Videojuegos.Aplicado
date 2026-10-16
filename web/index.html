@@ -10,16 +10,16 @@
     try { const saved=localStorage.getItem('pasos-appearance'); document.documentElement.dataset.appearance=['light','dark'].includes(saved)?saved:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; } catch {}
   </script>
   <link rel="canonical" href="https://juanchibruzzone.github.io/Videojuegos.Aplicado/web/index.html">
-  <link rel="stylesheet" href="./styles.css?v=20261015-scope">
+  <link rel="stylesheet" href="./styles.css?v=revision-3">
   <script defer src="./vendor/puzzlescript.js"></script>
-  <script type="module" src="./app.js?v=20261015-scope-2"></script>
+  <script type="module" src="./app.js?v=revision-3"></script>
 </head>
 <body>
   <a class="skip" href="#content">Ir al contenido</a>
   <header class="topbar">
     <a class="brand" href="#prototipado/07-feedback/juego/0"><span class="brand-mark" aria-hidden="true">✳</span><span>pasos de luz<span class="brand-sub">CUADERNO DE DESARROLLO</span></span></a>
     <nav class="sections" aria-label="Secciones del trabajo">
-      <button data-section="prototipado" class="active">Prototipado <span>08</span></button>
+      <button data-section="prototipado" class="active">Prototipado <span>11</span></button>
       <button data-section="scope">Scope</button>
       <button class="future" disabled title="Se agregarán cuando avancemos">Próximas etapas <span>＋</span></button>
     </nav>
@@ -27,9 +27,9 @@
   </header>
   <div class="workspace">
     <aside class="sidebar" aria-label="Etapas de prototipado">
-      <div class="sidebar-heading"><span>EL PROCESO</span><span id="completed-count">0 / 8</span></div>
+      <div class="sidebar-heading"><span>EL PROCESO</span><span id="completed-count">0 / 11</span></div>
       <nav id="stage-nav" aria-label="Elegir un prototipo"></nav>
-      <div class="sidebar-note"><span class="tiny-star">✧</span><p>Un recorrido.<br>Muchas preguntas.</p><span>Diseño de Juegos Aplicado<br>Juan Ignacio Bruzzone</span></div>
+      <div class="sidebar-note"><span class="tiny-star">✧</span><p>Diseñar.<br>Jugar. Ajustar.</p><span>Diseño de Juegos Aplicado<br>Juan Ignacio Bruzzone</span></div>
     </aside>
     <main id="content" tabindex="-1">
       <section id="prototype-section">
@@ -41,26 +41,27 @@
           <article id="research" class="research prose" aria-label="Investigación de la etapa" hidden></article>
           <div class="play-column">
             <section class="game-card" aria-label="Prototipo jugable">
-              <div class="game-topline"><label class="case-select">CASO <select id="level-select" aria-label="Caso de prueba"></select></label><div id="theme-toggle" class="theme-toggle" hidden><button data-theme="dungeon">Dungeon</button><button data-theme="observatory">Observatorio</button></div><span class="live-label"><i></i> INTERACTIVO</span></div>
+              <div class="game-topline"><label class="case-select"><span id="case-label">PRUEBA</span> <select id="level-select" aria-label="Caso de prueba"></select></label><div id="theme-toggle" class="theme-toggle" hidden><button data-theme="dungeon">Dungeon</button><button data-theme="observatory">Observatorio</button></div><span class="live-label"><i></i> INTERACTIVO</span></div>
+              <p id="level-instruction" class="level-instruction" aria-live="polite" hidden></p>
               <div class="board-wrap" id="board-wrap"><canvas id="board" width="1120" height="760" tabindex="0" role="img" aria-label="Tablero de Pasos de Luz. Usá las flechas o los controles de abajo."></canvas><div class="board-message" id="board-message" hidden></div><div class="board-caption"><span id="board-world">OBSERVATORIO · CONSTELACIÓN 01</span><span>✧</span></div></div>
               <div class="game-status"><div><span class="status-dot" id="status-dot"></span><strong id="status-title" aria-live="polite">Preparando el tablero…</strong><span id="status-count"></span></div><span id="turn-count">0 acciones</span></div>
               <div class="game-controls"><div class="direction-pad" aria-label="Mover al jugador"><button data-input="1" aria-label="Mover a la izquierda">←</button><div><button data-input="0" aria-label="Mover arriba">↑</button><button data-input="2" aria-label="Mover abajo">↓</button></div><button data-input="3" aria-label="Mover a la derecha">→</button></div><button class="pulse-button" id="pulse" data-input="4">✧ Pulso <kbd>X / espacio</kbd></button><div class="utility-controls"><button id="undo" title="Deshacer (Z)">↶ <span>Deshacer</span></button><button id="restart" title="Reiniciar (R)">↻ <span>Reiniciar</span></button></div></div>
             </section>
-            <div class="under-game"><p id="goal"></p><button id="solution-toggle" aria-expanded="false">Ver un recorrido <span>↗</span></button></div>
+            <div class="under-game"><p id="goal"></p><button id="next-level" class="primary-button" hidden>Siguiente nivel →</button><button id="solution-toggle" aria-expanded="false">Ver un recorrido <span>↗</span></button></div>
             <div id="solution" class="solution" hidden></div>
-            <div class="legend"><span><i class="legend-player"></i> Vos</span><span><i class="legend-dark"></i> Por iluminar</span><span><i class="legend-light"></i> Iluminada</span><span id="shadow-legend"><i class="legend-shadow"></i> Sombra</span><span id="gate-legend" hidden><i class="legend-gate"></i> Sello / compuerta</span><span class="keys-hint">Flechas / WASD · Z deshace · R reinicia</span></div>
+            <div class="legend"><span><i class="legend-player"></i> Vos</span><span><i class="legend-dark"></i> Por iluminar</span><span><i class="legend-light"></i> Iluminada</span><span id="shadow-legend"><i class="legend-shadow"></i> Sombra</span><span id="gate-legend" hidden><i class="legend-gate"></i> Sello / compuerta</span><span id="portal-legend" hidden><i class="legend-portal"></i> Teleporter A → B</span><span id="void-legend" hidden><i class="legend-void"></i> Piso negro fijo</span><span class="keys-hint">Flechas / WASD · Z deshace · R reinicia</span></div>
             <details class="source-details"><summary>Fuente de este prototipo <span>PuzzleScript ↗</span></summary><p>Este es el programa que está ejecutando la demo.</p><a id="download-source" download>Descargar fuente</a><pre><code id="source-code"></code></pre></details>
           </div>
         </div>
         <section class="question-card" id="question-card"><span class="question-icon">↳</span><div><p class="eyebrow" id="question-label">LA PREGUNTA</p><h2 id="question-title"></h2><p id="question-explanation"></p></div><button id="open-research">Leer el research <span>→</span></button></section>
-        <footer class="page-footer"><span>Pasos de Luz <span class="footer-separator">/</span> Prototipos reconstruidos · Octubre 2026</span><span id="engine-state">Motor oficial de PuzzleScript</span></footer>
+        <footer class="page-footer"><span>Pasos de Luz <span class="footer-separator">/</span> Diseño de Juegos Aplicado</span><span id="engine-state">Hecho en PuzzleScript</span></footer>
       </section>
       <section id="scope-section" class="scope-page" hidden>
-        <p class="eyebrow">02 / CIERRE DE PREPRODUCCIÓN</p>
-        <h1>Hasta dónde llega<br>Pasos de Luz.</h1>
-        <p class="scope-intro">Ocho niveles, una regla que los une y una sola mecánica nueva. Este es el trabajo que falta para convertir las pruebas en un juego completo.</p>
-        <div class="scope-facts" aria-label="Resumen del alcance"><div><strong>8</strong><span>niveles por producir</span></div><div><strong>24 h</strong><span>trabajo estimado</span></div><div><strong>6 h</strong><span>margen para ajustes</span></div></div>
-        <nav class="scope-links" aria-label="Documentos y pruebas del scope"><a href="#prototipado/08-compuertas/research/0">Probar sellos y compuertas ↗</a><a id="scope-drive" hidden target="_blank" rel="noreferrer">Abrir en Drive ↗</a></nav>
+        <p class="eyebrow">SCOPE</p>
+        <h1>Scope de<br>Pasos de Luz.</h1>
+        <p class="scope-intro">Elementos del juego, proceso de producción y tiempo estimado.</p>
+        <div class="scope-facts" aria-label="Estimación de producción"><div><strong>16</strong><span>niveles</span></div><div><strong>11 h</strong><span>diseño y pruebas de niveles</span></div><div><strong>1 h</strong><span>ajustes de implementación</span></div></div>
+        <nav class="scope-links" aria-label="Documento de scope"><a id="scope-drive" hidden target="_blank" rel="noreferrer">Abrir documento en Drive ↗</a></nav>
         <article id="scope-content" class="prose scope-prose" aria-label="Scope de Pasos de Luz"><p>Cargando el scope…</p></article>
         <button id="back-prototypes" class="primary-button">Volver al prototipado →</button>
       </section>

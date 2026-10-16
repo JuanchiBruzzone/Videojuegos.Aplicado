@@ -1,21 +1,7 @@
-# ¿Qué aporta la Sombra?
+# La Sombra ocupa el camino
 
-Quería sumar una presión pequeña, sin convertir el juego en una persecución. La Sombra comparte el mismo recurso que el jugador intenta completar: las casillas oscuras.
+Las Sombras patrullan en horizontal cada vez que doy un paso válido. La luz y las paredes les cierran el paso. No se mueven mientras pienso ni por chocar contra un obstáculo.
 
-## Cómo funciona esta versión
+Para despejar una casilla, tengo que acercarme y usar **Pulso con X, Espacio o el botón**. Disipa las Sombras que estén arriba, abajo, a la izquierda o a la derecha. No pinta el piso: después tengo que caminar sobre él.
 
-- La Sombra patrulla en horizontal después de un movimiento válido del jugador.
-- Rebota al encontrar una pared o una casilla iluminada. Si no tiene lugar, se queda donde está.
-- No puede ocupar luz ni entrar en el jugador.
-- Intentar entrar directamente en su casilla bloquea el movimiento.
-- **Pulso** disipa una Sombra que esté al lado: arriba, abajo, izquierda o derecha.
-
-El Pulso no mueve al jugador ni ilumina a distancia. Primero despejo la Sombra; después camino hasta su casilla.
-
-## Qué cambió
-
-La entrega anterior explicaba dónde podía estar la Sombra, pero dejaba sin resolver cómo recuperar el espacio que ocupaba. El Pulso cierra esa parte de la regla.
-
-No hay una cuenta regresiva ni ataques en tiempo real. Puedo mirar el tablero y decidir cuándo acercarme.
-
-**Decisión:** mantener una patrulla simple y una forma explícita de disiparla. La dificultad de esta versión está en el recorrido, no en los reflejos.
+La primera presentación usa una Sombra. Más adelante aparecen dos y finalmente tres. Cambia la cantidad de posiciones que tengo que mirar, no los controles.

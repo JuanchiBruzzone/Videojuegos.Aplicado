@@ -121,7 +121,7 @@ Trapped
 ======
 RULES
 ======
-[ action Player | Shade ] -> [ Player Pulse | ]
+[ action Player | Shade ] -> [ action Player Pulse | ]
 [ action Player ] -> [ Player ]
 [ moving Player ] -> [ moving Player Trail ]
 [ > Player | Light ] -> [ Player | Light ]

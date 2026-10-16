@@ -1,6 +1,6 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 import { engine, source, at } from '../tests/engine-helper.mjs';
-const ids=['02-victoria','03-recorrido','04-encierro','05-sombra','06-contexto','07-feedback','08-compuertas'];
+const ids=['02-victoria','03-recorrido','04-encierro','05-sombra','06-contexto','07-feedback','08-compuertas','09-teleporter','10-piso-negro','11-progresion'];
 const labels=['↑','←','↓','→','Pulso'];
 const results=[];
 for(const id of ids){

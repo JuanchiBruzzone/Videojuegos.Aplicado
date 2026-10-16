@@ -1,9 +1,11 @@
-import {stages} from './data/stages.js';
+import {stages} from './data/stages.js?v=revision-3';
 import {markdown} from './markdown.js';
+const CONTENT_VERSION='revision-3';
 const $=id=>document.getElementById(id);
 let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, theme='observatory';
-let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, verification={results:[]}, completed=new Set();
+let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, verification={results:[]}, completed=new Set(), campaignCompleted=new Set();
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
+try{campaignCompleted=new Set(JSON.parse(localStorage.getItem('pasos-campaign-levels')||'[]'));}catch{}
 function applyAppearance(value){
  document.documentElement.dataset.appearance=value;
  document.querySelectorAll('button[data-appearance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appearance===value)));
@@ -34,20 +36,22 @@ function setMode(){
  $('question-card').hidden=view==='research';
  requestAnimationFrame(draw);
 }
-async function fetchText(url){const r=await fetch(url);if(!r.ok)throw new Error('No pude cargar este prototipo. Probá recargar la página.');return r.text();}
+async function fetchText(url){const r=await fetch(`${url}?v=${CONTENT_VERSION}`);if(!r.ok)throw new Error('No pude cargar este prototipo. Probá recargar la página.');return r.text();}
 async function loadStage(){
  const ticket=++sequence;
  renderNav();setMode();
  $('eyebrow').textContent=`ESTUDIO ${String(stages.indexOf(selected)+1).padStart(2,'0')} / ${selected.tag}`;
  $('stage-title').textContent=selected.title;$('stage-description').textContent=selected.description;
- $('question-label').textContent=selected.feedback?'LA DEVOLUCIÓN DEL PROFESOR':'LA PREGUNTA';
+ $('question-label').textContent=selected.feedback?'FEEDBACK':'LA PREGUNTA';
  $('question-title').textContent=selected.question;
- $('question-explanation').textContent=selected.feedback?'Si la Sombra ocupa el último espacio oscuro, tiene que existir una forma clara de despejarlo y terminar el nivel.':'Esta etapa aísla una duda del diseño. La explicación y el prototipo se pueden ver juntos en Research.';
+ $('question-explanation').textContent=selected.goal;
  $('goal').textContent=selected.goal;
+ $('case-label').textContent=selected.campaign?'NIVEL':'PRUEBA';
+ $('level-instruction').hidden=!selected.hints;$('level-instruction').textContent=selected.hints?.[levelIndex]||'';
  $('level-select').innerHTML=selected.levels.map((label,i)=>`<option value="${i}">${String(i+1).padStart(2,'0')} · ${label}</option>`).join('');
  $('level-select').value=String(levelIndex);
  $('pulse').hidden=!selected.shadow;$('shadow-legend').hidden=!selected.shadow;
- $('theme-toggle').hidden=!selected.compare;$('gate-legend').hidden=!selected.gate;
+ $('theme-toggle').hidden=!selected.compare;
  theme=selected.theme;
  document.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active',b.dataset.theme===theme));
  $('solution').hidden=true;$('solution-toggle').setAttribute('aria-expanded','false');
@@ -67,7 +71,10 @@ function update(){
  const trapped=!boardState.won&&player?.names.includes('trapped');
  const shadows=count('shadoweast')+count('shadowwest');
  $('pulse').hidden=!initialShadows;$('shadow-legend').hidden=!initialShadows;
- $('status-title').textContent=boardState.won?'Constelación completa':trapped?'Este camino quedó cerrado':initialShadows&&!shadows?'La Sombra se disipó':'El recorrido sigue';
+ $('gate-legend').hidden=!(count('rune')||count('gateclosed')||count('gateopen'));
+ $('portal-legend').hidden=!count('portalin');$('void-legend').hidden=!count('void');
+ $('next-level').hidden=!selected.campaign||!boardState.won||levelIndex>=selected.levels.length-1;
+ $('status-title').textContent=boardState.won?'Constelación completa':trapped?'Este camino quedó cerrado':initialShadows&&!shadows?'Sin Sombras':'El recorrido sigue';
  $('status-count').textContent=`${lit} / ${lit+dark} iluminadas`;
  $('turn-count').textContent=`${actions} ${actions===1?'acción':'acciones'}`;
  $('status-dot').classList.toggle('warn',trapped);
@@ -77,10 +84,11 @@ function update(){
  $('pulse').disabled=boardState.won||!shadows;
  $('undo').disabled=boardState.undo===0;
  $('board-world').textContent=(theme==='observatory'?'OBSERVATORIO · CONSTELACIÓN ':'DUNGEON · SALA ')+String(levelIndex+1).padStart(2,'0');
- canvas.setAttribute('aria-label',`Tablero: ${lit} de ${lit+dark} casillas iluminadas. ${shadows?'Hay una Sombra. ':''}${boardState.won?'Nivel completado.':trapped?'El jugador está encerrado.':'Usá flechas para moverte.'}`);
- canvas.dataset.darkRemaining=String(dark);canvas.dataset.won=String(boardState.won);canvas.dataset.player=player?`${player.x},${player.y}`:'';
- $('engine-state').textContent='Motor oficial de PuzzleScript';
- if(boardState.won&&!completed.has(selected.id)){completed.add(selected.id);try{localStorage.setItem('pasos-completed',JSON.stringify([...completed]));}catch{}renderNav();}
+ canvas.setAttribute('aria-label',`Tablero: ${lit} de ${lit+dark} casillas iluminadas. ${shadows?`Hay ${shadows} ${shadows===1?'Sombra':'Sombras'}. `:''}${count('void')?'El piso negro está bloqueado. ':''}${boardState.won?'Nivel completado.':trapped?'El jugador está encerrado.':'Usá flechas para moverte.'}`);
+ canvas.dataset.shadows=String(shadows);canvas.dataset.darkRemaining=String(dark);canvas.dataset.won=String(boardState.won);canvas.dataset.player=player?`${player.x},${player.y}`:'';
+ $('engine-state').textContent='Hecho en PuzzleScript';
+ if(boardState.won&&selected.campaign&&!campaignCompleted.has(levelIndex)){campaignCompleted.add(levelIndex);try{localStorage.setItem('pasos-campaign-levels',JSON.stringify([...campaignCompleted]));}catch{}}
+ if(boardState.won&&(!selected.campaign||campaignCompleted.size===selected.levels.length)&&!completed.has(selected.id)){completed.add(selected.id);try{localStorage.setItem('pasos-completed',JSON.stringify([...completed]));}catch{}renderNav();}
  draw();
 }
 function input(direction){
@@ -103,6 +111,7 @@ function draw(){
  const round=(x,y,width,height,r)=>{ctx.beginPath();ctx.roundRect(x,y,width,height,r);};
  for(const cell of playable){
   const x=ox+cell.x*size+4,y=oy+cell.y*size+4,s=size-8,lit=cell.names.includes('light');
+  if(cell.names.includes('void')){round(x,y,s,s,5);ctx.fillStyle='#020305';ctx.fill();ctx.strokeStyle='#526071';ctx.lineWidth=1;ctx.stroke();ctx.strokeStyle='#657084';ctx.beginPath();ctx.moveTo(x+s*.38,y+s*.38);ctx.lineTo(x+s*.62,y+s*.62);ctx.moveTo(x+s*.62,y+s*.38);ctx.lineTo(x+s*.38,y+s*.62);ctx.stroke();continue;}
   if(lit){const glow=ctx.createRadialGradient(x+s/2,y+s/2,0,x+s/2,y+s/2,size);glow.addColorStop(0,'#eac57d21');glow.addColorStop(1,'#eac57d00');ctx.fillStyle=glow;ctx.fillRect(x-size/2,y-size/2,size*2,size*2);}
   round(x,y+6,s,s,6);ctx.fillStyle=lit?'#655139':obs?'#111b2c':'#20221f';ctx.fill();
   round(x,y,s,s,6);const tile=ctx.createLinearGradient(x,y,x+s,y+s);tile.addColorStop(0,lit?'#e7c88d':obs?'#293952':'#49483d');tile.addColorStop(1,lit?'#9c8054':obs?'#19273e':'#292e2c');ctx.fillStyle=tile;ctx.fill();ctx.strokeStyle=lit?'#ffe5ad99':obs?'#55668155':'#786e5455';ctx.lineWidth=1;ctx.stroke();
@@ -110,6 +119,7 @@ function draw(){
   ctx.fillStyle=lit?'#ffedb3':obs?'#697fa2':'#868372';ctx.beginPath();ctx.arc(x+s/2,y+s/2,lit?2.3:1.8,0,Math.PI*2);ctx.fill();
   if(obs&&lit){ctx.strokeStyle='#ffebbb44';ctx.beginPath();ctx.moveTo(x+s/2-7,y+s/2);ctx.lineTo(x+s/2+7,y+s/2);ctx.moveTo(x+s/2,y+s/2-7);ctx.lineTo(x+s/2,y+s/2+7);ctx.stroke();}
   const cx=x+s/2,cy=y+s/2;
+  if(cell.names.includes('portalin')||cell.names.includes('portalout')){const entering=cell.names.includes('portalin');ctx.strokeStyle=entering?'#72dce8':'#e2b7ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,s*.3,0,Math.PI*2);ctx.stroke();ctx.fillStyle=ctx.strokeStyle;ctx.font='bold 13px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(entering?'A →':'B',cx,cy+5);}
   if(cell.names.includes('rune')){ctx.strokeStyle='#9ce7d1';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(cx,cy-14);ctx.lineTo(cx+12,cy);ctx.lineTo(cx,cy+14);ctx.lineTo(cx-12,cy);ctx.closePath();ctx.stroke();}
   if(cell.names.includes('gateclosed')||cell.names.includes('gateopen')){const closed=cell.names.includes('gateclosed');ctx.strokeStyle=closed?'#e8b998':'#9ce7d1';ctx.lineWidth=3;ctx.strokeRect(x+9,y+8,s-18,s-16);if(closed){for(let t=-1;t<=1;t++){ctx.beginPath();ctx.moveTo(cx+t*9,y+10);ctx.lineTo(cx+t*9,y+s-10);ctx.stroke();}}}
   if(cell.names.some(n=>n.startsWith('shadow'))){
@@ -134,6 +144,7 @@ $('undo').onclick=()=>{if(boardState){boardState=PuzzleLab.undo();actions=Math.m
 $('restart').onclick=()=>{if(boardState){boardState=PuzzleLab.restart();actions=0;update();}};
 $('level-select').onchange=e=>{levelIndex=Number(e.target.value);route();};
 $('solution-toggle').onclick=solution;
+$('next-level').onclick=()=>{if(boardState?.won&&levelIndex<selected.levels.length-1){levelIndex++;route();canvas.focus({preventScroll:true});window.scrollTo({top:0,behavior:'smooth'});}};
 $('open-research').onclick=()=>{view='research';route();};
 $('back-prototypes').onclick=()=>{section='prototipado';route();};
 window.addEventListener('keydown',e=>{
@@ -152,7 +163,7 @@ function readRoute(){
  if(key!==previousKey){previousKey=key;loadStage();}else{setMode();renderNav();}
 }
 window.addEventListener('hashchange',readRoute);new ResizeObserver(draw).observe(canvas);
-fetch('./data/verification.json').then(r=>r.ok?r.json():Promise.reject()).then(data=>verification=data).catch(()=>{});
-fetch('./research/scope.md').then(r=>{if(!r.ok)throw new Error();return r.text();}).then(text=>{$('scope-content').innerHTML=markdown(text);}).catch(()=>{$('scope-content').textContent='No pude cargar el scope. Recargá la página para volver a intentar.';});
+fetch(`./data/verification.json?v=${CONTENT_VERSION}`).then(r=>r.ok?r.json():Promise.reject()).then(data=>verification=data).catch(()=>{});
+fetch(`./research/scope.md?v=${CONTENT_VERSION}`).then(r=>{if(!r.ok)throw new Error();return r.text();}).then(text=>{$('scope-content').innerHTML=markdown(text);}).catch(()=>{$('scope-content').textContent='No pude cargar el scope. Recargá la página para volver a intentar.';});
 fetch('./data/scope.json').then(r=>r.json()).then(data=>{if(data.documentUrl){$('scope-drive').href=data.documentUrl;$('scope-drive').hidden=false;}}).catch(()=>{});
 readRoute();

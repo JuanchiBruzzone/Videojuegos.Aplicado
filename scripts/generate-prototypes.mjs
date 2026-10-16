@@ -94,7 +94,7 @@ Trapped
 RULES
 ======
 `;
-const pulse = `[ action Player | Shade ] -> [ Player Pulse | ]
+const pulse = `[ action Player | Shade ] -> [ action Player Pulse | ]
 [ action Player ] -> [ Player ]
 `;
 const block = `[ > Player | Light ] -> [ Player | Light ]
@@ -136,21 +136,54 @@ export const specifications = [
  {id:'08-compuertas',name:'Sellos y compuertas',blocked:true,win:true,trap:true,shade:true,gate:true,boards:[`#######\n#PKG..#\n#######`,`#####\n#P.S#\n#..G#\n#K..#\n#####`]},
  {id:'07-feedback',name:'La última casilla',blocked:true,win:true,trap:true,shade:true,boards:[finalTile,corridor,shadeBoard]},
 ];
+export const campaignBoards = [
+ `#######\n#P....#\n#######`,
+ `#####\n#P..#\n###.#\n###.#\n#####`,
+ board,
+ finalTile,
+ corridor,
+ `########\n#PS.S..#\n########`,
+ `#######\n#PKG..#\n#######`,
+ `#####\n#P.S#\n#..G#\n#K..#\n#####`,
+ `######\n#P..S#\n#...G#\n#KS..#\n######`,
+ `#########\n#P.A#B..#\n#########`,
+ `##########\n#PKGA#B..#\n##########`,
+ `###########\n#PKGA#BS.S#\n###########`,
+ `#####\n#P..#\n#._.#\n#...#\n#####`,
+ `#########\n#P..#B..#\n#A_.#####\n#...#####\n#########`,
+ `#########\n#PKG#B.S#\n#A_.#####\n#S..#####\n#########`,
+ `##########\n#PKG#BS.S#\n#A_.######\n#S..######\n##########`,
+];
+specifications.push(
+ {id:'09-teleporter',name:'Teleporter',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,boards:[campaignBoards[9],`##########\n#PKGA#B.S#\n##########`]},
+ {id:'10-piso-negro',name:'Piso negro fijo',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,void:true,boards:[campaignBoards[12],campaignBoards[13]]},
+ {id:'11-progresion',name:'Recorrido de niveles',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,void:true,boards:campaignBoards},
+);
 await mkdir('web/prototipos',{recursive:true});
 for (const s of specifications) {
- let rules = s.shade ? pulse : '[ action Player ] -> [ Player ]\n';
- rules += '[ moving Player ] -> [ moving Player Trail ]\n';
- if (s.blocked) rules += block;
- if (s.gate) rules += '[ > Player | GateClosed ] -> [ Player | GateClosed ]\n';
- if (s.shade) rules += shadow;
- rules += `late [ Player Trail ] -> cancel
+ let programBase=base;
+ if(s.gate)programBase=programBase.replace('=======\nLEGEND',`GateClosed\n#e8b998\n00000\n0.0.0\n0.0.0\n0.0.0\n00000\n\nGateOpen\n#9ce7d1\n00000\n0...0\n0...0\n0...0\n00000\n\nRune\n#9ce7d1\n..0..\n.0.0.\n0...0\n.0.0.\n..0..\n\n=======\nLEGEND`).replace('Barrier = Wall or Light','K = Rune and Dark\nG = GateClosed and Dark\nBarrier = Wall or Light or GateClosed').replace('Player, Wall, ShadowEast, ShadowWest','Player, Wall, ShadowEast, ShadowWest, GateClosed\nGateOpen\nRune');
+ if(s.portal)programBase=programBase.replace('=======\nLEGEND',`PortalIn\n#72dce8\n.000.\n0...0\n0.000\n0...0\n.000.\n\nPortalOut\n#e2b7ff\n.000.\n0...0\n000.0\n0...0\n.000.\n\n=======\nLEGEND`).replace('. = Dark','. = Dark\nA = PortalIn and Dark\nB = PortalOut and Dark').replace('Trail\nPulse\nTrapped','PortalIn, PortalOut\nTrail\nPulse\nTrapped');
+ if(s.void)programBase=programBase.replace('=======\nLEGEND',`Void\n#020305 #10151d\n11111\n10001\n10001\n10001\n11111\n\n=======\nLEGEND`).replace('. = Dark','. = Dark\n_ = Void').replace('Barrier = Wall or Light or GateClosed','Barrier = Wall or Light or GateClosed or Void').replace('Player, Wall, ShadowEast, ShadowWest, GateClosed','Player, Wall, ShadowEast, ShadowWest, GateClosed, Void');
+ let rules=s.shade?pulse:'[ action Player ] -> [ Player ]\n';
+ rules+='[ moving Player ] -> [ moving Player Trail ]\n';
+ if(s.blocked)rules+=block;
+ if(s.gate)rules+='[ > Player | GateClosed ] -> [ Player | GateClosed ]\n';
+ if(s.void)rules+='[ > Player | Void ] -> [ Player | Void ]\n';
+ if(s.shade)rules+=shadow;
+ rules+=`late [ Player Trail ] -> cancel
 late [ Trail ] -> [ ]
 late [ Pulse ] -> [ ]
 late [ Player Dark ] -> [ Player Light ]
 `;
- if(s.gate) rules += 'late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]\n';
- if(s.trap) rules += s.gate?trapped.replaceAll('| Dark ]','| Dark no GateClosed ]'):trapped;
- const source = `title Pasos de Luz - ${s.name}\n`+(s.gate?base.replace('=======\nLEGEND',`GateClosed\n#e8b998\n00000\n0.0.0\n0.0.0\n0.0.0\n00000\n\nGateOpen\n#9ce7d1\n00000\n0...0\n0...0\n0...0\n00000\n\nRune\n#9ce7d1\n..0..\n.0.0.\n0...0\n.0.0.\n..0..\n\n=======\nLEGEND`).replace('Barrier = Wall or Light','K = Rune and Dark\nG = GateClosed and Dark\nBarrier = Wall or Light or GateClosed').replace('Player, Wall, ShadowEast, ShadowWest','Player, Wall, ShadowEast, ShadowWest, GateClosed\nGateOpen\nRune'):base)+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.join('\n\n')+'\n';
+ if(s.gate)rules+='late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]\n';
+ if(s.portal)rules+=`late [ Player PortalIn ] [ PortalOut Light ] -> cancel
+late [ Player PortalIn ] [ PortalOut Shade ] -> cancel
+late [ Player PortalIn ] [ PortalOut Dark no Shade ] -> [ PortalIn ] [ Player PortalOut Dark ]
+late [ Player Dark ] -> [ Player Light ]
+`;
+ if(s.trap)rules+=s.gate?trapped.replaceAll('| Dark ]','| Dark no GateClosed ]'):trapped;
+ const source=`title Pasos de Luz - ${s.name}\n`+programBase+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.join('\n\n')+'\n';
  await writeFile(`web/prototipos/${s.id}.puzzlescript`,source);
 }
-console.log('Ocho prototipos de PuzzleScript generados.');
+console.log(`${specifications.length} prototipos de PuzzleScript generados.`);
