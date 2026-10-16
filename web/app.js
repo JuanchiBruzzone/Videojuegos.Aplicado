@@ -5,6 +5,7 @@ let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, t
 let boardState=null, actions=0, sourceText='', sequence=0, verification={results:[]}, completed=new Set();
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
 const canvas=$('board'),ctx=canvas.getContext('2d');
+document.querySelector('.skip').onclick=e=>{e.preventDefault();$('content').focus();};
 const same=(a,b)=>a.objects.join(',')===b.objects.join(',');
 const count=name=>boardState?.cells.filter(c=>c.names.includes(name)).length||0;
 function route(){location.hash=[section,selected.id,view,levelIndex].join('/');}
