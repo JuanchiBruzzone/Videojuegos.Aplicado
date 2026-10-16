@@ -1,0 +1,117 @@
+title Pasos de Luz - Iluminar para ganar
+author Juan Ignacio Bruzzone
+homepage github.com/JuanchiBruzzone/Videojuegos.Aplicado
+background_color #090d18
+text_color #f4dea3
+
+========
+OBJECTS
+========
+
+Background
+#090d18
+
+Dark
+#1c2940 #33425e
+11111
+10001
+10001
+10001
+11111
+
+Light
+#f4c974 #72572f
+11111
+10001
+10001
+10001
+11111
+
+Wall
+#131b2b
+
+Player
+#ecf8ff #90dcff
+..0..
+.000.
+00100
+.111.
+1...1
+
+ShadowEast
+#a38aff #432b72
+..0..
+.010.
+01110
+01110
+1.1.1
+
+ShadowWest
+#a38aff #432b72
+..0..
+.010.
+01110
+01110
+1.1.1
+
+Trail
+transparent
+
+Pulse
+transparent
+
+Trapped
+transparent
+
+=======
+LEGEND
+=======
+
+. = Dark
+# = Wall
+P = Player and Light
+S = ShadowEast and Dark
+W = ShadowWest and Dark
+Shade = ShadowEast or ShadowWest
+Barrier = Wall or Light
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Dark, Light
+Player, Wall, ShadowEast, ShadowWest
+Trail
+Pulse
+Trapped
+
+======
+RULES
+======
+[ action Player ] -> [ Player ]
+[ moving Player ] -> [ moving Player Trail ]
+late [ Player Trail ] -> cancel
+late [ Trail ] -> [ ]
+late [ Pulse ] -> [ ]
+late [ Player Dark ] -> [ Player Light ]
+
+==============
+WINCONDITIONS
+==============
+
+no Dark
+
+=======
+LEVELS
+=======
+
+#####
+#P..#
+#...#
+#...#
+#####

@@ -1,0 +1,24 @@
+{
+  "repositorio": "https://github.com/increpare/PuzzleScript",
+  "commit": "ac4207a8754e1c50d1d25f8189fa52010b3b5402",
+  "archivos": [
+    "storagewrapper.js",
+    "bitvec.js",
+    "level.js",
+    "languageConstants.js",
+    "globalVariables.js",
+    "debug_off.js",
+    "font.js",
+    "rng.js",
+    "riffwave.js",
+    "sfxr.js",
+    "codemirror/stringstream.js",
+    "colorhelpers.js",
+    "colors.js",
+    "engine.js",
+    "parser.js",
+    "compiler.js",
+    "soundbar.js"
+  ],
+  "integracion": "Se agrupan los archivos sin modificar sus reglas. El adaptador carga, avanza y lee el tablero; el sitio dibuja el resultado."
+}

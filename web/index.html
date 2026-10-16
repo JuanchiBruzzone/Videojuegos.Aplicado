@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f5ef">
+  <meta name="description" content="Pasos de Luz. Una bitácora jugable del prototipado: recorrer, iluminar y encontrar un camino.">
+  <title>Pasos de Luz — Cuaderno de desarrollo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./vendor/puzzlescript.js"></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#content">Ir al contenido</a>
+  <header class="topbar">
+    <a class="brand" href="#prototipado/07-feedback/juego/0"><span class="brand-mark" aria-hidden="true">✳</span><span>pasos de luz<span class="brand-sub">CUADERNO DE DESARROLLO</span></span></a>
+    <nav class="sections" aria-label="Secciones del trabajo">
+      <button data-section="prototipado" class="active">Prototipado <span>07</span></button>
+      <button data-section="scope">Scope <span class="soon-dot" aria-hidden="true"></span></button>
+      <button class="future" disabled title="Se agregarán cuando avancemos">Próximas etapas <span>＋</span></button>
+    </nav>
+    <a class="repo-link" href="https://github.com/JuanchiBruzzone/Videojuegos.Aplicado" target="_blank" rel="noreferrer">Repositorio <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="Etapas de prototipado">
+      <div class="sidebar-heading"><span>EL PROCESO</span><span id="completed-count">0 / 7</span></div>
+      <nav id="stage-nav" aria-label="Elegir un prototipo"></nav>
+      <div class="sidebar-note"><span class="tiny-star">✧</span><p>Un recorrido.<br>Muchas preguntas.</p><span>Diseño de Juegos Aplicado<br>Juan Ignacio Bruzzone</span></div>
+    </aside>
+    <main id="content" tabindex="-1">
+      <section id="prototype-section">
+        <div class="page-heading">
+          <div><p class="eyebrow" id="eyebrow"></p><h1 id="stage-title"></h1><p class="intro" id="stage-description"></p></div>
+          <div class="mode-toggle" role="group" aria-label="Modo de la etapa"><button data-view="juego">Juego</button><button data-view="research">Research</button></div>
+        </div>
+        <div class="study-layout" id="study-layout">
+          <article id="research" class="research prose" aria-label="Investigación de la etapa" hidden></article>
+          <div class="play-column">
+            <section class="game-card" aria-label="Prototipo jugable">
+              <div class="game-topline"><label class="case-select">CASO <select id="level-select" aria-label="Caso de prueba"></select></label><div id="theme-toggle" class="theme-toggle" hidden><button data-theme="dungeon">Dungeon</button><button data-theme="observatory">Observatorio</button></div><span class="live-label"><i></i> INTERACTIVO</span></div>
+              <div class="board-wrap" id="board-wrap"><canvas id="board" width="1120" height="760" tabindex="0" role="img" aria-label="Tablero de Pasos de Luz. Usá las flechas o los controles de abajo."></canvas><div class="board-message" id="board-message" hidden></div><div class="board-caption"><span id="board-world">OBSERVATORIO · CONSTELACIÓN 01</span><span>✧</span></div></div>
+              <div class="game-status"><div><span class="status-dot" id="status-dot"></span><strong id="status-title" aria-live="polite">Preparando el tablero…</strong><span id="status-count"></span></div><span id="turn-count">0 acciones</span></div>
+              <div class="game-controls"><div class="direction-pad" aria-label="Mover al jugador"><button data-input="1" aria-label="Mover a la izquierda">←</button><div><button data-input="0" aria-label="Mover arriba">↑</button><button data-input="2" aria-label="Mover abajo">↓</button></div><button data-input="3" aria-label="Mover a la derecha">→</button></div><button class="pulse-button" id="pulse" data-input="4">✧ Pulso <kbd>espacio</kbd></button><div class="utility-controls"><button id="undo" title="Deshacer (Z)">↶ <span>Deshacer</span></button><button id="restart" title="Reiniciar (R)">↻ <span>Reiniciar</span></button></div></div>
+            </section>
+            <div class="under-game"><p id="goal"></p><button id="solution-toggle" aria-expanded="false">Ver un recorrido <span>↗</span></button></div>
+            <div id="solution" class="solution" hidden></div>
+            <div class="legend"><span><i class="legend-player"></i> Vos</span><span><i class="legend-dark"></i> Por iluminar</span><span><i class="legend-light"></i> Iluminada</span><span id="shadow-legend"><i class="legend-shadow"></i> Sombra</span><span class="keys-hint">Flechas / WASD · Z deshace · R reinicia</span></div>
+            <details class="source-details"><summary>Fuente de este prototipo <span>PuzzleScript ↗</span></summary><p>Este es el programa que está ejecutando la demo.</p><a id="download-source" download>Descargar fuente</a><pre><code id="source-code"></code></pre></details>
+          </div>
+        </div>
+        <section class="question-card" id="question-card"><span class="question-icon">↳</span><div><p class="eyebrow" id="question-label">LA PREGUNTA</p><h2 id="question-title"></h2><p id="question-explanation"></p></div><button id="open-research">Leer el research <span>→</span></button></section>
+        <footer class="page-footer"><span>Pasos de Luz <span class="footer-separator">/</span> Prototipos reconstruidos · Octubre 2026</span><span id="engine-state">Motor oficial de PuzzleScript</span></footer>
+      </section>
+      <section id="scope-section" class="scope-page" hidden><p class="eyebrow">LO QUE SIGUE</p><h1>Ponerle un límite<br>a la idea.</h1><p>El prototipado responde si la mecánica funciona. En el scope vamos a decidir qué entra en la entrega: niveles, sistemas y trabajo pendiente.</p><div class="scope-note"><span>02</span><div><h2>Scope</h2><p>Esta sección queda preparada para la próxima etapa. Todavía no definimos su contenido.</p></div></div><button id="back-prototypes" class="primary-button">Volver al prototipado →</button></section>
+    </main>
+  </div>
+  <noscript>Para jugar los prototipos necesitás habilitar JavaScript.</noscript>
+</body>
+</html>

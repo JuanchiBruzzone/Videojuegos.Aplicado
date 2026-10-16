@@ -1,0 +1,150 @@
+{
+  "engine": "PuzzleScript oficial",
+  "method": "Búsqueda de recorridos y reproducción de cada solución en el mismo motor del sitio.",
+  "results": [
+    {
+      "id": "02-victoria",
+      "level": 0,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ → ↓ ↓",
+      "states": 367,
+      "verified": true
+    },
+    {
+      "id": "03-recorrido",
+      "level": 0,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ → ↓ ↓",
+      "states": 71,
+      "verified": true
+    },
+    {
+      "id": "04-encierro",
+      "level": 0,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ → ↓ ↓",
+      "states": 71,
+      "verified": true
+    },
+    {
+      "id": "05-sombra",
+      "level": 0,
+      "inputs": [
+        3,
+        3,
+        3,
+        4,
+        3
+      ],
+      "solution": "→ → → Pulso →",
+      "states": 5,
+      "verified": true
+    },
+    {
+      "id": "05-sombra",
+      "level": 1,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        4,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
+      "states": 83,
+      "verified": true
+    },
+    {
+      "id": "06-contexto",
+      "level": 0,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        4,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
+      "states": 83,
+      "verified": true
+    },
+    {
+      "id": "07-feedback",
+      "level": 0,
+      "inputs": [
+        4,
+        3
+      ],
+      "solution": "Pulso →",
+      "states": 2,
+      "verified": true
+    },
+    {
+      "id": "07-feedback",
+      "level": 1,
+      "inputs": [
+        3,
+        3,
+        3,
+        4,
+        3
+      ],
+      "solution": "→ → → Pulso →",
+      "states": 5,
+      "verified": true
+    },
+    {
+      "id": "07-feedback",
+      "level": 2,
+      "inputs": [
+        2,
+        2,
+        3,
+        0,
+        0,
+        4,
+        3,
+        2,
+        2
+      ],
+      "solution": "↓ ↓ → ↑ ↑ Pulso → ↓ ↓",
+      "states": 83,
+      "verified": true
+    }
+  ]
+}
