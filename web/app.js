@@ -6,12 +6,12 @@ let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, ver
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
 function applyAppearance(value){
  document.documentElement.dataset.appearance=value;
- document.querySelectorAll('[data-appearance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appearance===value)));
+ document.querySelectorAll('button[data-appearance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appearance===value)));
  document.querySelector('meta[name="theme-color"]').content=value==='dark'?'#151c1a':'#f7f5ef';
 }
 const systemAppearance=matchMedia('(prefers-color-scheme: dark)');
 applyAppearance(document.documentElement.dataset.appearance||(systemAppearance.matches?'dark':'light'));
-document.querySelectorAll('[data-appearance]').forEach(button=>button.onclick=()=>{
+document.querySelectorAll('button[data-appearance]').forEach(button=>button.onclick=()=>{
  const value=button.dataset.appearance;applyAppearance(value);try{localStorage.setItem('pasos-appearance',value);}catch{}
 });
 systemAppearance.addEventListener('change',event=>{try{if(localStorage.getItem('pasos-appearance'))return;}catch{}applyAppearance(event.matches?'dark':'light');});
