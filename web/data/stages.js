@@ -1,21 +1,4 @@
-const campaign = [
- ['Primeros pasos','Movete con las flechas o WASD y pintá el pasillo completo.'],
- ['Doblar el camino','El piso pintado no permite volver. Si querés corregir, Z deshace y R reinicia.'],
- ['Elegir un recorrido','Pintá toda la sala sin cerrar el acceso a las casillas que faltan.'],
- ['Conocer el Pulso','La Sombra bloquea el paso. Probá X, Espacio o Pulso y después entrá en su casilla.'],
- ['Una Sombra en movimiento','La Sombra avanza con tus pasos. Acercate hasta una casilla vecina para usar Pulso.'],
- ['Dos Sombras','Pulso alcanza a todas las Sombras vecinas. Mirá sus posiciones antes de avanzar.'],
- ['El sello y la puerta','Pisá el sello verde: abre la compuerta. Después pintá el camino que quedó libre.'],
- ['Abrir con una Sombra','Combiná el sello con Pulso. Abrir la compuerta no pinta su piso.'],
- ['Abrir con dos Sombras','Decidí cuándo abrir el paso y desde dónde acercarte a cada Sombra.'],
- ['De A a B','Al pisar A aparecés en B y se pintan ambos extremos. El viaje funciona en un solo sentido.'],
- ['Abrir antes de viajar','Activá el sello y recorré ese sector antes de entrar en A.'],
- ['Sombras al llegar','La salida B debe estar libre y sin pintar. Observá las patrullas y usá Pulso al llegar.'],
- ['El piso negro','El bloque negro no se puede pisar ni pintar. Rodealo: no cuenta para completar el nivel.'],
- ['Rodear antes de salir','El piso negro corta el centro. Pintá este sector antes de usar A → B.'],
- ['Combinar el recorrido','Sello, compuerta, teleporter y piso negro, con dos Sombras. Elegí el orden de los pasos.'],
- ['Tres Sombras','Usá las reglas que ya conocés. Quedan tres Sombras y todos los sectores por pintar.'],
-];
+import { campaign } from './campaign.js?v=1.1.0';
 export const stages = [
  {id:'01-luz',title:'Pintar al caminar',short:'El cambio del piso',question:'¿Cómo cambia la casilla que piso?',tag:'Pintar',description:'Cada paso deja una casilla iluminada. En esta prueba todavía puedo volver atrás.',levels:['Pintar y volver'],goal:'Recorré el piso y mirá cómo cambia. Acá podés volver por la luz.',theme:'dungeon',research:'01-luz.md'},
  {id:'02-victoria',title:'Completar el tablero',short:'La condición de victoria',question:'¿Cuándo termino el nivel?',tag:'Victoria',description:'El nivel se completa al pintar todas las casillas transitables.',levels:['Pintar todo'],goal:'Pintá las nueve casillas. La inicial ya cuenta.',theme:'dungeon',research:'02-victoria.md'},
@@ -27,5 +10,5 @@ export const stages = [
  {id:'08-compuertas',title:'Sellos y compuertas',short:'Abrir un camino',question:'¿Cuándo conviene abrir la compuerta?',tag:'Compuerta',description:'Pisar el sello verde abre una parte del recorrido.',levels:['El sello abre el paso','Compuerta y Sombra'],goal:'Pisá el sello para abrir la compuerta y pintá también su piso.',theme:'observatory',research:'08-compuertas.md',shadow:true,gate:true},
  {id:'09-teleporter',title:'Teleporter',short:'De A a B',question:'¿Qué dejo pendiente al cambiar de sector?',tag:'Teleporter',description:'Entrar en A lleva a B. El salto conecta dos partes del tablero.',levels:['Conocer el salto','Compuerta, salto y Sombra'],hints:['Pisá A para aparecer en B. Ambos extremos se pintan y el viaje es de ida.','Abrí la compuerta, terminá el sector de entrada y viajá. B debe estar libre y sin pintar.'],goal:'Completá ambos sectores. El teleporter funciona de A a B.',theme:'observatory',research:'09-teleporter.md',shadow:true,gate:true,portal:true},
  {id:'10-piso-negro',title:'Piso negro fijo',short:'Casillas bloqueadas',question:'¿Qué cambia si parte del piso no se puede pisar?',tag:'Piso negro',description:'El piso negro permanece bloqueado. Hay que rodearlo, no pintarlo.',levels:['Rodear el bloque','Piso negro y teleporter'],hints:['El bloque negro no cuenta para ganar. Pintá el piso que lo rodea.','Rodeá el bloque y terminá el sector antes de viajar de A a B.'],goal:'El piso negro no se pisa ni cuenta para completar el nivel.',theme:'observatory',research:'10-piso-negro.md',shadow:true,gate:true,portal:true,void:true},
- {id:'11-progresion',title:'Los 16 niveles',short:'Aprender y combinar',question:'¿Se entienden las reglas al jugar los niveles?',tag:'Progresión',description:'Primero pintar, después Sombra, compuerta, teleporter y piso negro. Las combinaciones aparecen a medida que avanzo.',levels:campaign.map(([title])=>title),hints:campaign.map(([,hint])=>hint),goal:'Pintá todas las casillas transitables.',theme:'observatory',research:'11-progresion.md',shadow:true,gate:true,portal:true,void:true,campaign:true},
+ {id:'11-progresion',title:'Los 16 niveles',short:'Aprender y combinar',question:'¿Se entienden las reglas al jugar los niveles?',tag:'Progresión',description:'Un comienzo breve y salas cada vez más exigentes. Las pistas presentan cada mecánica; los últimos niveles combinan recorridos, compuertas, saltos y patrullas.',levels:campaign.map(level=>level.title),hints:campaign.map(level=>level.hint),goal:'Pintá todas las casillas transitables.',theme:'observatory',research:'11-progresion.md',shadow:true,gate:true,portal:true,void:true,campaign:true},
 ];

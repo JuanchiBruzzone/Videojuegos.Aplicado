@@ -10,9 +10,9 @@
     try { const saved=localStorage.getItem('pasos-appearance'); document.documentElement.dataset.appearance=['light','dark'].includes(saved)?saved:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; } catch {}
   </script>
   <link rel="canonical" href="https://juanchibruzzone.github.io/Videojuegos.Aplicado/web/index.html">
-  <link rel="stylesheet" href="./styles.css?v=revision-3">
-  <script defer src="./vendor/puzzlescript.js"></script>
-  <script type="module" src="./app.js?v=revision-4"></script>
+  <link rel="stylesheet" href="./styles.css?v=1.1.0">
+  <script defer src="./vendor/puzzlescript.js?v=1.1.0"></script>
+  <script type="module" src="./app.js?v=1.1.0"></script>
 </head>
 <body>
   <a class="skip" href="#content">Ir al contenido</a>
@@ -47,7 +47,7 @@
               <div class="game-status"><div><span class="status-dot" id="status-dot"></span><strong id="status-title" aria-live="polite">Preparando el tablero…</strong><span id="status-count"></span></div><span id="turn-count">0 acciones</span></div>
               <div class="game-controls"><div class="direction-pad" aria-label="Mover al jugador"><button data-input="1" aria-label="Mover a la izquierda">←</button><div><button data-input="0" aria-label="Mover arriba">↑</button><button data-input="2" aria-label="Mover abajo">↓</button></div><button data-input="3" aria-label="Mover a la derecha">→</button></div><button class="pulse-button" id="pulse" data-input="4">✧ Pulso <kbd>X / espacio</kbd></button><div class="utility-controls"><button id="undo" title="Deshacer (Z)">↶ <span>Deshacer</span></button><button id="restart" title="Reiniciar (R)">↻ <span>Reiniciar</span></button></div></div>
             </section>
-            <div class="under-game"><p id="goal"></p><button id="next-level" class="primary-button" hidden>Siguiente nivel →</button><button id="solution-toggle" aria-expanded="false">Ver un recorrido <span>↗</span></button></div>
+            <div class="under-game"><p id="goal"></p><button id="next-level" class="primary-button" hidden>Siguiente nivel →</button><button id="hint-toggle" hidden>Volver a leer la pista</button><button id="solution-toggle" aria-expanded="false">Ver un recorrido <span>↗</span></button></div>
             <div id="solution" class="solution" hidden></div>
             <div class="legend"><span><i class="legend-player"></i> Vos</span><span><i class="legend-dark"></i> Por iluminar</span><span><i class="legend-light"></i> Iluminada</span><span id="shadow-legend"><i class="legend-shadow"></i> Sombra</span><span id="gate-legend" hidden><i class="legend-gate"></i> Sello / compuerta</span><span id="portal-legend" hidden><i class="legend-portal"></i> Teleporter A → B</span><span id="void-legend" hidden><i class="legend-void"></i> Piso negro fijo</span><span class="keys-hint">Flechas / WASD · Z deshace · R reinicia</span></div>
             <details class="source-details"><summary>Fuente de este prototipo <span>PuzzleScript ↗</span></summary><p>Este es el programa que está ejecutando la demo.</p><a id="download-source" download>Descargar fuente</a><pre><code id="source-code"></code></pre></details>
@@ -67,6 +67,14 @@
       </section>
     </main>
   </div>
+  <dialog id="intro-screen" class="intro-screen" aria-labelledby="intro-title" aria-describedby="intro-text">
+    <p class="eyebrow">PASOS DE LUZ · UNA PISTA</p>
+    <span class="intro-star" aria-hidden="true">✧</span>
+    <h2 id="intro-title"></h2>
+    <p id="intro-text"></p>
+    <button type="button" id="intro-continue" class="primary-button" autofocus>Entrar a la constelación →</button>
+    <p class="intro-keys">Enter o Espacio para continuar</p>
+  </dialog>
   <noscript>Para jugar los prototipos necesitás habilitar JavaScript.</noscript>
 </body>
 </html>

@@ -20,5 +20,5 @@
     "compiler.js",
     "soundbar.js"
   ],
-  "integracion": "Se agrupan los archivos sin modificar sus reglas. El adaptador carga, avanza y lee el tablero; el sitio dibuja el resultado."
+  "integracion": "Se agrupan los archivos sin modificar sus reglas. El adaptador carga, avanza y lee el tablero; separa las entradas message de las salas jugables y entrega sus pistas a la interfaz. El sitio dibuja el resultado."
 }

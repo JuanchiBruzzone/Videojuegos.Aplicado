@@ -2,6 +2,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { engine, source, at } from './engine-helper.mjs';
+import { campaign } from '../web/data/campaign.js';
 const ids=['01-luz','02-victoria','03-recorrido','04-encierro','05-sombra','06-contexto','07-feedback'];
 const path=[3,3,2,1,1,2,3,3];
 for(const id of ids) test(`${id}: compila en el motor oficial`,()=>assert.deepEqual(Array.from(engine().load(source(id)).errors),[]));
@@ -91,10 +92,33 @@ test('Pulso disipa todas las Sombras vecinas sin pintar sus casillas',()=>{
 test('la progresión tiene 16 salas; introduce reglas y llega a tres Sombras sin perder soluciones',()=>{
  const e=engine(),code=source('11-progresion');assert.equal(e.load(code).levels,16);
  assert.equal(at(e.load(code,0),'shadoweast').length,0);assert.equal(at(e.load(code,3),'shadoweast').length,1);
- assert.equal(at(e.load(code,5),'shadoweast').length,2);assert.equal(at(e.load(code,6),'rune').length,1);
- assert.equal(at(e.load(code,9),'portalin').length,1);assert.equal(at(e.load(code,12),'void').length,1);
+ const two=e.load(code,5);assert.equal(at(two,'shadoweast').length+at(two,'shadowwest').length,2);assert.equal(at(e.load(code,6),'rune').length,1);
+ assert.equal(at(e.load(code,9),'portalin').length,1);assert(at(e.load(code,12),'void').length>=1);
  const last=e.load(code,15);assert.equal(at(last,'shadoweast').length+at(last,'shadowwest').length,3);
  const results=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results;
  const campaign=results.filter(r=>r.id==='11-progresion');assert.equal(campaign.length,16);
  for(const result of results.filter(r=>['09-teleporter','10-piso-negro','11-progresion'].includes(r.id))){e.load(source(result.id),result.level);for(const d of result.inputs)e.input(d);assert(e.snapshot().won);assert.equal(at(e.snapshot(),'dark').length,0);}
+});
+test('las pistas message anteceden cada mecánica sin alterar la numeración de las salas',()=>{
+ const e=engine(),code=source('11-progresion');
+ assert.equal((code.match(/^message /gm)||[]).length,5);
+ for(let i=0;i<campaign.length;i++){
+  const s=e.load(code,i);
+  assert.equal(s.levels,16);
+  assert.equal(s.intro.replace(/\s+/g,' '),campaign[i].intro.replace(/\s+/g,' '));
+  assert.equal(at(s,'player').length,1);
+  if(campaign[i].intro){
+   e.input(3);const restarted=e.restart();
+   assert.equal(restarted.intro,s.intro);assert.deepEqual(restarted.objects,s.objects);
+  }
+ }
+});
+test('la progresión pasa de un pasillo sin elecciones a salas con rutas que aíslan piso',()=>{
+ const results=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results.filter(r=>r.id==='11-progresion');
+ assert.equal(results[0].tiles,5);assert.equal(results[0].routeChoices,0);
+ for(const i of [5,8,11,14,15]){
+  assert(results[i].routeChoices>=3);assert(results[i].losingChoices>=1);
+ }
+ assert(results[15].tiles>=40);assert(results[15].tiles>results[14].tiles);
+ assert.equal(results[15].inputs.filter(d=>d===4).length,3);
 });

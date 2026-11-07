@@ -184,6 +184,8 @@ no Dark
 LEVELS
 =======
 
+message Cada paso despierta una estrella. La luz que dejás atrás guarda memoria: elegí qué querés alcanzar antes de avanzar.
+
 #######
 #P....#
 #######
@@ -197,69 +199,104 @@ LEVELS
 #####
 #P..#
 #...#
+##..#
+#####
+
+message Entre las estrellas se mueve algo que no responde a tus pasos de la misma manera. A veces, quedarse cerca y hacer un pulso dice más que avanzar.
+
+#####
+#.SP#
 #...#
-#####
-
-#####
-#PS##
-#####
-
-#######
-#P.S..#
-#######
-
-########
-#PS.S..#
-########
-
-#######
-#PKG..#
-#######
-
-#####
-#P.S#
-#..G#
-#K..#
+#..##
 #####
 
 ######
-#P..S#
-#...G#
-#KS..#
+#P..##
+#S...#
+##...#
+#....#
 ######
 
-#########
-#P.A#B..#
-#########
+#######
+#..WSP#
+#.....#
+#.#...#
+#.#...#
+#######
 
-##########
-#PKGA#B..#
-##########
+message Hay marcas que se responden a la distancia. Tal vez el camino que parece cerrado esté esperando algo de otra parte de la sala.
+
+######
+#P..K#
+#..G.#
+#.#..#
+######
+
+######
+#.#SP#
+#....#
+#G..K#
+#...##
+######
+
+#######
+#P....#
+#S..G.#
+#...#.#
+#.WK..#
+#..#.##
+#######
+
+message Dos anillos, una sola dirección. Antes de dejar una constelación, preguntate qué luz seguiría faltando si ya no pudieras volver.
+
+#########
+#P..##.B#
+#...#...#
+##A.#...#
+#########
 
 ###########
-#PKGA#BS.S#
+#P.K##...B#
+#....#....#
+##...#..#.#
+#A.G.######
 ###########
 
-#####
-#P..#
-#._.#
-#...#
-#####
+############
+#P....#.#.B#
+#S..G.#....#
+#..K#.#.W..#
+#...#A#...##
+############
 
-#########
-#P..#B..#
-#A_.#####
-#...#####
-#########
+message Hay fragmentos del observatorio que ya no esperan luz. Su silencio también dibuja el camino: mirá qué accesos quedan a cada lado.
 
-#########
-#PKG#B.S#
-#A_.#####
-#S..#####
-#########
+#######
+#P....#
+#.....#
+#..._.#
+#..._.#
+#######
 
-##########
-#PKG#BS.S#
-#A_.######
-#S..######
-##########
+############
+#P._A#....B#
+#....#...S.#
+#....#._...#
+#_...#._...#
+############
+
+#############
+#P...S#.._.B#
+#...G.#.....#
+#..K_.#.....#
+#..._A#...W.#
+#######..._.#
+#############
+
+#############
+#P._..#.._.B#
+#..K..#..W..#
+#.....#.....#
+#....G#S....#
+#A_.S.#..._.#
+#############

@@ -1,11 +1,12 @@
-import {stages} from './data/stages.js?v=revision-3';
+import {stages} from './data/stages.js?v=1.1.0';
 import {markdown} from './markdown.js';
-const CONTENT_VERSION='revision-3';
+const CONTENT_VERSION='1.1.0';
 const $=id=>document.getElementById(id);
 let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, theme='observatory';
-let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, verification={results:[]}, completed=new Set(), campaignCompleted=new Set();
+let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, pendingIntro=false, verification={results:[]}, completed=new Set(), campaignCompleted=new Set();
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
-try{campaignCompleted=new Set(JSON.parse(localStorage.getItem('pasos-campaign-levels')||'[]'));}catch{}
+try{campaignCompleted=new Set(JSON.parse(localStorage.getItem('pasos-campaign-levels-1.1')||'[]'));}catch{}
+if(campaignCompleted.size<stages.at(-1).levels.length)completed.delete('11-progresion');
 function applyAppearance(value){
  document.documentElement.dataset.appearance=value;
  document.querySelectorAll('button[data-appearance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.appearance===value)));
@@ -28,6 +29,7 @@ function renderNav(){
  $('stage-nav').querySelectorAll('button').forEach(button=>button.onclick=()=>{selected=stages.find(s=>s.id===button.dataset.stage);levelIndex=0;route();});
 }
 function setMode(){
+ if(section!=='prototipado'||view!=='juego')$('intro-screen').close();
  $('prototype-section').hidden=section!=='prototipado';$('scope-section').hidden=section!=='scope';
  document.querySelector('.sidebar').hidden=section==='scope';document.querySelector('.workspace').classList.toggle('scope-active',section==='scope');
  document.querySelectorAll('[data-section]').forEach(b=>{b.classList.toggle('active',b.dataset.section===section);b.setAttribute('aria-pressed',String(b.dataset.section===section));});
@@ -35,10 +37,22 @@ function setMode(){
  $('research').hidden=view!=='research';$('study-layout').classList.toggle('research-mode',view==='research');
  $('question-card').hidden=view==='research';
  requestAnimationFrame(draw);
+ showIntro();
 }
+function showIntro(){
+ if(!pendingIntro||!boardState?.intro||section!=='prototipado'||view!=='juego')return;
+ $('intro-title').textContent=selected.levels[levelIndex];
+ $('intro-text').textContent=boardState.intro;
+ if(!$('intro-screen').open)$('intro-screen').showModal();
+ pendingIntro=false;
+}
+$('intro-continue').onclick=()=>$('intro-screen').close();
+$('intro-screen').addEventListener('close',()=>{if(!$('intro-screen').open&&section==='prototipado'&&view==='juego')canvas.focus({preventScroll:true});});
+$('hint-toggle').onclick=()=>{pendingIntro=true;showIntro();};
 async function fetchText(url){const r=await fetch(`${url}?v=${CONTENT_VERSION}`);if(!r.ok)throw new Error('No pude cargar este prototipo. Probá recargar la página.');return r.text();}
 async function loadStage(){
  const ticket=++sequence;
+ $('intro-screen').close();pendingIntro=false;
  renderNav();setMode();
  $('eyebrow').textContent=`ESTUDIO ${String(stages.indexOf(selected)+1).padStart(2,'0')} / ${selected.tag}`;
  $('stage-title').textContent=selected.title;$('stage-description').textContent=selected.description;
@@ -63,6 +77,7 @@ async function loadStage(){
   sourceText=code;$('source-code').textContent=code;$('download-source').href=`./prototipos/${selected.id}.puzzlescript`;
   $('research').innerHTML=markdown(research);
   boardState=PuzzleLab.load(code,levelIndex);initialShadows=count('shadoweast')+count('shadowwest');actions=0;update();
+  $('hint-toggle').hidden=!boardState.intro;pendingIntro=!!boardState.intro;showIntro();
  }catch(error){if(ticket!==sequence)return;$('status-title').textContent=error.message;$('engine-state').textContent='No se pudo cargar la demo';$('board-message').textContent='No pude preparar el tablero. Recargá para volver a intentar.';$('board-message').hidden=false;}
 }
 function update(){
@@ -87,12 +102,12 @@ function update(){
  canvas.setAttribute('aria-label',`Tablero: ${lit} de ${lit+dark} casillas iluminadas. ${shadows?`Hay ${shadows} ${shadows===1?'Sombra':'Sombras'}. `:''}${count('void')?'El piso negro está bloqueado. ':''}${boardState.won?'Nivel completado.':trapped?'El jugador está encerrado.':'Usá flechas para moverte.'}`);
  canvas.dataset.shadows=String(shadows);canvas.dataset.darkRemaining=String(dark);canvas.dataset.won=String(boardState.won);canvas.dataset.player=player?`${player.x},${player.y}`:'';
  $('engine-state').textContent='Hecho en PuzzleScript';
- if(boardState.won&&selected.campaign&&!campaignCompleted.has(levelIndex)){campaignCompleted.add(levelIndex);try{localStorage.setItem('pasos-campaign-levels',JSON.stringify([...campaignCompleted]));}catch{}}
+ if(boardState.won&&selected.campaign&&!campaignCompleted.has(levelIndex)){campaignCompleted.add(levelIndex);try{localStorage.setItem('pasos-campaign-levels-1.1',JSON.stringify([...campaignCompleted]));}catch{}}
  if(boardState.won&&(!selected.campaign||campaignCompleted.size===selected.levels.length)&&!completed.has(selected.id)){completed.add(selected.id);try{localStorage.setItem('pasos-completed',JSON.stringify([...completed]));}catch{}renderNav();}
  draw();
 }
 function input(direction){
- if(!boardState||section!=='prototipado'||boardState.won)return;
+ if(!boardState||section!=='prototipado'||boardState.won||$('intro-screen').open)return;
  const before=boardState;boardState=PuzzleLab.input(direction);if(!same(before,boardState))actions++;update();
 }
 function draw(){
@@ -119,7 +134,7 @@ function draw(){
   ctx.fillStyle=lit?'#ffedb3':obs?'#697fa2':'#868372';ctx.beginPath();ctx.arc(x+s/2,y+s/2,lit?2.3:1.8,0,Math.PI*2);ctx.fill();
   if(obs&&lit){ctx.strokeStyle='#ffebbb44';ctx.beginPath();ctx.moveTo(x+s/2-7,y+s/2);ctx.lineTo(x+s/2+7,y+s/2);ctx.moveTo(x+s/2,y+s/2-7);ctx.lineTo(x+s/2,y+s/2+7);ctx.stroke();}
   const cx=x+s/2,cy=y+s/2;
-  if(cell.names.includes('portalin')||cell.names.includes('portalout')){const entering=cell.names.includes('portalin');ctx.strokeStyle=entering?'#72dce8':'#e2b7ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,s*.3,0,Math.PI*2);ctx.stroke();ctx.fillStyle=ctx.strokeStyle;ctx.font='bold 13px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(entering?'A →':'B',cx,cy+5);}
+  if(cell.names.includes('portalin')||cell.names.includes('portalout')){const entering=cell.names.includes('portalin');ctx.strokeStyle=entering?'#72dce8':'#e2b7ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,s*.3,0,Math.PI*2);ctx.stroke();ctx.fillStyle=ctx.strokeStyle;ctx.font=`bold ${Math.max(8,Math.min(13,s*.42))}px ui-monospace,monospace`;ctx.textAlign='center';ctx.fillText(entering?'A →':'B',cx,cy+Math.min(5,s*.2));}
   if(cell.names.includes('rune')){const radius=Math.min(14,s*.28);ctx.strokeStyle='#9ce7d1';ctx.lineWidth=Math.min(3,s*.06);ctx.beginPath();ctx.moveTo(cx,cy-radius);ctx.lineTo(cx+radius*.85,cy);ctx.lineTo(cx,cy+radius);ctx.lineTo(cx-radius*.85,cy);ctx.closePath();ctx.stroke();}
   if(cell.names.includes('gateclosed')||cell.names.includes('gateopen')){const closed=cell.names.includes('gateclosed'),pad=Math.min(9,s*.16),step=Math.min(9,s*.18);ctx.strokeStyle=closed?'#e8b998':'#9ce7d1';ctx.lineWidth=Math.min(3,s*.05);ctx.strokeRect(x+pad,y+pad,s-pad*2,s-pad*2);if(closed){for(let t=-1;t<=1;t++){ctx.beginPath();ctx.moveTo(cx+t*step,y+pad);ctx.lineTo(cx+t*step,y+s-pad);ctx.stroke();}}}
   ctx.save();ctx.translate(cx,cy);const actorScale=Math.min(1,s/58);ctx.scale(actorScale,actorScale);ctx.translate(-cx,-cy);
@@ -150,6 +165,10 @@ $('next-level').onclick=()=>{if(boardState?.won&&levelIndex<selected.levels.leng
 $('open-research').onclick=()=>{view='research';route();};
 $('back-prototypes').onclick=()=>{section='prototipado';route();};
 window.addEventListener('keydown',e=>{
+ if($('intro-screen').open){
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();if(!e.repeat)$('intro-screen').close();}
+  return;
+ }
  if(e.altKey||e.metaKey||e.ctrlKey||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||section!=='prototipado')return;
  if(view==='research'&&e.target!==canvas)return;
  if(e.key===' '&&e.target.tagName==='BUTTON')return;

@@ -1,0 +1,17 @@
+{
+  "folderId": "1rVpBfMZ6sYb2JhB2VF0uTCmDs0YGkdHq",
+  "version": "1.1.0",
+  "files": {
+    "code": {
+      "id": "1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_",
+      "url": "https://drive.google.com/file/d/1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_/view?usp=drivesdk",
+      "source": "docs/pasos-de-luz-codigo.md"
+    },
+    "feedback": {
+      "id": "1lH1sQ0g4rCBRHY7qcSFd-lO0EaJnxl6e",
+      "url": "https://drive.google.com/file/d/1lH1sQ0g4rCBRHY7qcSFd-lO0EaJnxl6e/view?usp=drivesdk",
+      "source": "docs/feedback.md"
+    }
+  },
+  "updatePolicy": "Actualizar los bytes del mismo ID con update_file; conservar versiones completas en el Markdown y las copias locales."
+}

@@ -15915,7 +15915,7 @@ consolePrint=function(){};
 consolePrintFromRule=function(){};
 consoleCacheDump=function(){};
 UnitTestingThrow=function(e){throw e;};
-let initialSource='', loadedIndex=0;
+let initialSource='', loadedIndex=0, playableLevels=[], levelIntro='';
 function snapshot(){
  const cells=[];
  for(let y=0;y<level.height;y++) for(let x=0;x<level.width;x++){
@@ -15923,10 +15923,23 @@ function snapshot(){
   for(const [name,obj] of Object.entries(state.objects)) if(bits.get(obj.id)) names.push(name);
   cells.push({x,y,names});
  }
- return {width:level.width,height:level.height,cells,won:winning,undo:backups.length,levels:state.levels.length,errors:errorStrings.slice(),objects:Array.from(level.objects)};
+ return {width:level.width,height:level.height,cells,won:winning,undo:backups.length,levels:playableLevels.length,intro:levelIntro,errors:errorStrings.slice(),objects:Array.from(level.objects)};
 }
 globalThis.PuzzleLab={
- load(source,index=0){initialSource=source;loadedIndex=index;unitTesting=false;lazyFunctionGeneration=false;compile(['loadLevel',index],source,'pasos-de-luz');if(errorCount)throw new Error(errorStrings.join('\n'));return snapshot();},
+ load(source,index=0){
+  initialSource=source;loadedIndex=index;unitTesting=false;lazyFunctionGeneration=false;
+  compile(['loadLevel',0],source,'pasos-de-luz');
+  if(errorCount)throw new Error(errorStrings.join('\n'));
+  playableLevels=[];let messages=[];
+  state.levels.forEach((entry,rawIndex)=>{
+   if(Object.hasOwn(entry,'message'))messages.push(entry.message);
+   else {playableLevels.push({rawIndex,intro:messages.join('\n\n')});messages=[];}
+  });
+  const target=playableLevels[index];
+  if(!target)throw new Error('Nivel fuera del recorrido.');
+  levelIntro=target.intro;loadLevelFromState(state,target.rawIndex);
+  return snapshot();
+ },
  input(dir){if(!winning)processInput(dir);return snapshot();},
  undo(){DoUndo(true,true);winning=false;return snapshot();},
  restart(){return this.load(initialSource,loadedIndex);},

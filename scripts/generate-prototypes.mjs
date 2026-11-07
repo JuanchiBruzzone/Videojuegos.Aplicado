@@ -1,4 +1,5 @@
 import { mkdir, writeFile } from 'node:fs/promises';
+import { campaign } from '../web/data/campaign.js';
 const base = `author Juan Ignacio Bruzzone
 homepage github.com/JuanchiBruzzone/Videojuegos.Aplicado
 background_color #090d18
@@ -136,27 +137,10 @@ export const specifications = [
  {id:'08-compuertas',name:'Sellos y compuertas',blocked:true,win:true,trap:true,shade:true,gate:true,boards:[`#######\n#PKG..#\n#######`,`#####\n#P.S#\n#..G#\n#K..#\n#####`]},
  {id:'07-feedback',name:'La última casilla',blocked:true,win:true,trap:true,shade:true,boards:[finalTile,corridor,shadeBoard]},
 ];
-export const campaignBoards = [
- `#######\n#P....#\n#######`,
- `#####\n#P..#\n###.#\n###.#\n#####`,
- board,
- finalTile,
- corridor,
- `########\n#PS.S..#\n########`,
- `#######\n#PKG..#\n#######`,
- `#####\n#P.S#\n#..G#\n#K..#\n#####`,
- `######\n#P..S#\n#...G#\n#KS..#\n######`,
- `#########\n#P.A#B..#\n#########`,
- `##########\n#PKGA#B..#\n##########`,
- `###########\n#PKGA#BS.S#\n###########`,
- `#####\n#P..#\n#._.#\n#...#\n#####`,
- `#########\n#P..#B..#\n#A_.#####\n#...#####\n#########`,
- `#########\n#PKG#B.S#\n#A_.#####\n#S..#####\n#########`,
- `##########\n#PKG#BS.S#\n#A_.######\n#S..######\n##########`,
-];
+export const campaignBoards = campaign.map(level=>level.board);
 specifications.push(
- {id:'09-teleporter',name:'Teleporter',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,boards:[campaignBoards[9],`##########\n#PKGA#B.S#\n##########`]},
- {id:'10-piso-negro',name:'Piso negro fijo',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,void:true,boards:[campaignBoards[12],campaignBoards[13]]},
+ {id:'09-teleporter',name:'Teleporter',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,boards:[`#########\n#P.A#B..#\n#########`,`##########\n#PKGA#B.S#\n##########`]},
+ {id:'10-piso-negro',name:'Piso negro fijo',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,void:true,boards:[`#####\n#P..#\n#._.#\n#...#\n#####`,`#########\n#P..#B..#\n#A_.#####\n#...#####\n#########`]},
  {id:'11-progresion',name:'Recorrido de niveles',blocked:true,win:true,trap:true,shade:true,gate:true,portal:true,void:true,boards:campaignBoards},
 );
 await mkdir('web/prototipos',{recursive:true});
@@ -183,7 +167,7 @@ late [ Player PortalIn ] [ PortalOut Dark no Shade ] -> [ PortalIn ] [ Player Po
 late [ Player Dark ] -> [ Player Light ]
 `;
  if(s.trap)rules+=s.gate?trapped.replaceAll('| Dark ]','| Dark no GateClosed ]'):trapped;
- const source=`title Pasos de Luz - ${s.name}\n`+programBase+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.join('\n\n')+'\n';
+ const source=`title Pasos de Luz - ${s.name}\n`+programBase+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.map((board,index)=>s.id==='11-progresion'&&campaign[index].intro?`message ${campaign[index].intro}\n\n${board}`:board).join('\n\n')+'\n';
  await writeFile(`web/prototipos/${s.id}.puzzlescript`,source);
 }
 console.log(`${specifications.length} prototipos de PuzzleScript generados.`);
