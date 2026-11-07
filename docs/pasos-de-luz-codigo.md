@@ -356,7 +356,7 @@ message Hay fragmentos del observatorio que ya no esperan luz. Su silencio tambi
 - El adaptador distingue mensajes de salas jugables; se conservan la selección de nivel, el avance, deshacer y reiniciar.
 - Se separa el progreso guardado de esta versión para que las salas nuevas se puedan completar de nuevo.
 - Se conserva el código completo de v1.0.0 y se agrega una exportación Markdown con ambas versiones.
-- Se registran los comentarios y ajustes F01–F09 en el documento de feedback.
+- Se registran los comentarios y ajustes F01–F08 en la planilla de feedback.
 
 Validación: búsqueda y reproducción de los 31 casos en el motor oficial, pruebas de reglas e interfaz y build del sitio. Las métricas de rutas describen opciones del tablero; el ajuste de dificultad percibida requiere observar partidas.
 

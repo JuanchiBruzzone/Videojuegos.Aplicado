@@ -11,7 +11,7 @@ La versión 1.1.0 reúne las pruebas de cada regla y un recorrido de 16 niveles:
 ## Documentos
 
 - [Código y versiones](docs/pasos-de-luz-codigo.md): fuente completa de PuzzleScript y registro de cambios.
-- [Feedback](docs/feedback.md): comentarios, ajustes y objetivos para la próxima ronda.
+- [Planilla de feedback](https://docs.google.com/spreadsheets/d/1t--fFLI9ZQ5oaVTt8CZsZMpleBgPVXPXw7JNlcznKWs/edit): observaciones por nivel, cambios, estados y versiones; incluye los objetivos de testeo.
 - [Prototipado](docs/prototipado-actualizado.md): pruebas, feedback y progresión de niveles.
 - [Scope](docs/scope.md): elementos, conjuntos, proceso de producción, etapas e interacciones y tiempo estimado.
 
@@ -39,7 +39,7 @@ El verificador busca y reproduce las soluciones con el mismo motor del sitio. Lo
 
 ## Archivos
 
-Los niveles y sus pistas se editan en [web/data/campaign.js](web/data/campaign.js). Después de generar y verificar, `npm run export:game` actualiza el Markdown con la fuente completa y conserva el código anterior. Los IDs de Drive se registran en `docs/drive.json`; las futuras actualizaciones reemplazan el contenido de esos mismos archivos.
+Los niveles y sus pistas se editan en [web/data/campaign.js](web/data/campaign.js). Después de generar y verificar, `npm run export:game` actualiza el Markdown con la fuente completa y conserva el código anterior. Los IDs de Drive se registran en `docs/drive.json`; las futuras actualizaciones conservan esos mismos IDs. El código se actualiza como Markdown y el feedback se edita en la planilla nativa.
 
 Las reglas están en [web/prototipos](web/prototipos), las explicaciones en [web/research](web/research) y el generador en [scripts/generate-prototypes.mjs](scripts/generate-prototypes.mjs). La interfaz dibuja el estado devuelto por el motor oficial incluido en [web/vendor](web/vendor).
 
