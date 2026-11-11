@@ -20,5 +20,5 @@
     "compiler.js",
     "soundbar.js"
   ],
-  "integracion": "Se agrupan los archivos sin modificar sus reglas. El adaptador carga, avanza y lee el tablero; separa las entradas message de las salas jugables y entrega sus pistas a la interfaz. El sitio dibuja el resultado."
+  "integracion": "Se agrupan los archivos sin modificar las reglas del motor. El adaptador separa mensajes de salas, entrega el tablero y registra los sonidos que emite PuzzleScript. La vista previa reproduce esos mismos sonidos cuando se activa el audio; no define efectos aparte."
 }

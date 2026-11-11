@@ -135,3 +135,18 @@ test('las seis salas avanzadas combinan tres patrullas, desvíos y las cinco reg
   const restored=e.restart();assert.deepEqual(restored.objects,s.objects);
  }
 });
+
+test('la introducción de Pulso no permite encierros ni diagonales y conserva Z y R',()=>{
+ const e=engine(),code=source('11-progresion'),queue=[[]],seen=new Set();
+ for(let i=0;i<queue.length;i++){
+  const path=queue[i];const initial=e.load(code,3);for(const d of path)e.input(d);
+  const state=e.snapshot(),key=state.objects.join(',');if(seen.has(key))continue;seen.add(key);
+  const player=at(state,'player')[0],shadows=state.cells.filter(c=>c.names.some(n=>n.startsWith('shadow')));
+  assert(state.won||!player.names.includes('trapped'));assert(shadows.every(c=>c.y===player.y));
+  if(path.length){const undone=e.undo();assert.notDeepEqual(undone.objects,state.objects);assert.deepEqual(e.restart().objects,initial.objects);}
+  if(state.won)continue;let moves=0;
+  for(let direction=0;direction<5;direction++){e.restore(state.objects);const next=e.input(direction);if(next.objects.join(',')!==key){moves++;queue.push([...path,direction]);}}
+  assert(moves>0);
+ }
+ assert.equal(seen.size,6);
+});

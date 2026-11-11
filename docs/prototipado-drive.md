@@ -2,151 +2,76 @@
 
 Juan Ignacio Bruzzone · Diseño de Juegos Aplicado
 
-## Qué probé
+## Qué quise comprobar
 
-Separé las preguntas del juego en pruebas cortas: pintar el piso, completar el tablero, bloquear el regreso, reconocer un encierro y despejar el paso con Pulso. Después sumé compuertas, teleporter y piso negro fijo, y armé una secuencia de niveles para probar cómo se aprenden.
+Separé el juego en pruebas cortas para responder las dudas que tenía: cómo pintar el piso, cuándo ganar, cómo impedir el regreso, qué pasa si me encierro y cómo recuperar una casilla ocupada. Después sumé compuertas, teleporter y piso negro, y armé una campaña para combinar esas reglas.
 
-## Pintar el recorrido
+## Pintar y completar el tablero
 
-La primera prueba tiene solo al personaje y el piso. Cada casilla que piso pasa de oscura a iluminada; el punto de partida ya está pintado.
+La primera prueba permite caminar y volver por el piso. Sirve para comprobar que la casilla de llegada cambia de oscura a iluminada. El punto de partida ya está pintado.
 
-late [ Player Dark ] -> [ Player Light ]
+La segunda agrega la victoria: completar todo el piso transitable. Background queda como base permanente y Dark representa lo que falta iluminar. El nivel termina cuando no queda Dark.
 
-En esta prueba puedo volver atrás. Así compruebo el cambio de color antes de agregar la restricción del recorrido.
+Mantengo esta regla porque el progreso se ve directamente en el tablero. No hace falta llegar a una salida ni contar el piso negro como una casilla pendiente.
 
-## Completar el tablero
+## Bloquear el regreso
 
-El objetivo es pintar todas las casillas transitables. No hace falta llegar a una salida: gano cuando no queda piso oscuro.
+En la tercera prueba ya no se puede volver por la luz. Eso hace que el orden importe: un paso puede dejar una parte del tablero sin acceso.
 
-no Dark
+La cuarta conserva el intento cuando el jugador se encierra. Z deshace y R reinicia. Prefiero que se pueda mirar el error y probar otra ruta, en lugar de perder el intento apenas sale mal.
 
-Uso Dark para las casillas pendientes. Background es la base del tablero y no cambia. El piso negro fijo, que aparece más adelante, no lleva Dark y no cuenta para ganar.
+## Sombra y Pulso
 
-## No puedo volver por la luz
+Las Sombras patrullan en horizontal con cada paso válido. La luz y los obstáculos les cierran el paso. No se mueven mientras el jugador piensa ni al intentar un paso bloqueado.
 
-Si pudiera volver por cualquier casilla, completar el tablero sería casi automático. Al bloquear el piso pintado, el orden de los pasos pasa a importar.
+Pulso se usa con X o Espacio desde una casilla vecina. Disipa todas las Sombras de arriba, abajo, izquierda y derecha. No mueve al personaje ni pinta: después hay que entrar en el espacio que quedó libre.
 
-[ > Player | Light ] -> [ Player | Light ]
+El caso de la última casilla comprueba esa diferencia: la Sombra bloquea, Pulso la disipa y el paso siguiente completa la pintura.
 
-Intentar entrar en una casilla iluminada no cambia el tablero. Compará esta prueba con la primera: ahora un desvío puede dejar una parte sin alcanzar.
+## Ambientación
 
-## Equivocarse y volver a probar
+Comparé dungeon y observatorio sobre el mismo tablero. Me quedo con el observatorio porque el recorrido puede leerse como la recuperación de una constelación. La luz cálida destaca sobre el piso azul oscuro.
 
-Un camino puede dejar casillas pendientes sin forma de llegar a ellas. Cuando pasa, el tablero queda visible para revisar el error.
+## Sello y compuerta
 
-Z deshace el último paso y R reinicia el nivel. También están los botones debajo del juego.
+Pisar el sello abre la compuerta. Su piso sigue oscuro hasta recorrerlo. Hay una prueba sin Sombras y otra que combina apertura con patrulla.
 
-La señal de encierro detecta si falta pintar y no queda una casilla oscura vecina. Una Sombra vecina permite usar Pulso; por eso no la tomo como un cierre del camino.
+En las salas más avanzadas alejo el sello para que abrir la puerta no sea automático: también hay que conservar una ruta para llegar a ella.
 
-No hace falta borrar el intento apenas sale mal. Poder mirar y corregir el recorrido forma parte del puzzle.
+## Teleporter
 
-## La Sombra ocupa el camino
+Entrar en A lleva a B y pinta ambos extremos. Es un viaje de ida. B tiene que estar libre y oscura; si está ocupada o ya tiene luz, se cancela el turno completo.
 
-Las Sombras patrullan en horizontal cada vez que doy un paso válido. La luz y las paredes les cierran el paso. No se mueven mientras pienso ni por chocar contra un obstáculo.
+La prueba inicial separa dos sectores. Las siguientes agregan compuerta y Sombras para exigir un orden: terminar el primer sector antes de abandonarlo.
 
-Para despejar una casilla, tengo que acercarme y usar Pulso con X, Espacio o el botón. Disipa las Sombras que estén arriba, abajo, a la izquierda o a la derecha. No pinta el piso: después tengo que caminar sobre él.
+## Piso negro
 
-La primera presentación usa una Sombra. Más adelante aparecen dos y finalmente tres. Cambia la cantidad de posiciones que tengo que mirar, no los controles.
+El piso negro no se pisa, no se pinta y no cuenta para ganar. Lo uso para cortar atajos y cambiar los accesos de una sala sin agregar otro control.
 
-## Un observatorio apagado
+Su marca permite distinguirlo del piso azul oscuro, que todavía necesita luz. Las pruebas comprueban el bloqueo y la condición de victoria.
 
-Cada nivel representa una constelación que recupera su luz con el recorrido. Las Sombras ocupan los fragmentos que todavía están apagados.
+## Progresión
 
-Probé el mismo tablero con dos ambientaciones. El selector cambia entre dungeon y observatorio sin reiniciar la partida, para comparar cómo se lee el escenario.
+Las 22 salas presentan pintura, Pulso, compuerta, teleporter y piso negro, en ese orden. Después combinan esas reglas. Hay una pista al presentar cada mecánica y un control para deshacer o reiniciar.
 
-Me quedo con el observatorio: el recorrido completo tiene sentido como forma de restaurar la constelación.
+Las seis salas nuevas tienen 56 casillas y tres Sombras cada una. Las paredes y los huecos cambian el orden de los recorridos en ambos sectores. Sus soluciones se encontraron y reprodujeron en el motor oficial.
 
-## El feedback: la última casilla
+## Cambios por feedback
 
-El feedback señaló una duda: si una Sombra ocupa la última casilla oscura, ¿cómo completo el nivel?
+Diego D señaló que la explicación de Pulso era ambigua y reportó un bloqueo en diagonal en el nivel 4. Vanesa también marcó un bloqueo en esa sala. Cambié su diseño por un pasillo: la Sombra está al lado y hay que usar Pulso antes de avanzar. El mensaje indica X, Espacio y el botón.
 
-Intento entrar. Qué pasa: La Sombra bloquea el paso.
+Revisé los seis estados posibles de la sala nueva. No hay posiciones diagonales ni encierros. Se comprobaron Pulso, deshacer y reiniciar. La sala siguiente introduce la patrulla en un espacio más abierto.
 
-Uso Pulso desde al lado. Qué pasa: La Sombra desaparece; el piso sigue oscuro.
+Para responder al pedido de mayor dificultad, agregué seis salas con bifurcaciones, paredes, huecos y las reglas ya aprendidas. La planilla conserva las palabras de Diego D y Vanesa junto a la respuesta aplicada.
 
-Entro en la casilla. Qué pasa: Se pinta y completo el nivel.
+## Sonido y aspecto
 
-El primer caso deja solamente esas dos casillas. Los otros prueban el acercamiento en un pasillo y en una sala.
+Los efectos están en la sección SOUNDS y en las reglas de PuzzleScript. Funcionan al copiar el programa al editor: pasos, Pulso, compuerta, salto, deshacer, reinicio y victoria. Al iniciar y completar una sala se oyen señales tonales breves. El motor oficial no reproduce una pista musical de fondo.
 
-Pulso resuelve el bloqueo sin cambiar el objetivo de pintar todo.
+Mejoré los sprites del piso, las Sombras, el personaje y las paredes. La web sigue siendo el cuaderno de prototipado y la vista previa del programa; reproduce los mismos efectos del motor.
 
-## Un sello abre el paso
+## Cierre
 
-Al pisar el sello verde, se abre la compuerta. Queda abierta hasta deshacer o reiniciar. Su piso también hay que pintarlo.
+La entrega actual, o vertical slice, incluye las 22 salas con sus reglas, pistas, sprites y sonidos. Se comprobaron 37 casos con victoria, contando los estudios anteriores. También pasaron las pruebas de reglas, controles, audio y preparación del sitio.
 
-El primer caso permite ver esa relación sin Sombras. El segundo combina la apertura con una patrulla.
-
-late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]
-
-En la progresión, la compuerta aparece después de aprender Pulso. Primero se muestra un sello y una puerta en un camino corto; después hay que decidir cuándo abrirla mientras se despejan las Sombras.
-
-## Entrar por A, salir por B
-
-El teleporter conecta dos partes del tablero. Al pisar A, aparezco en B y quedan pintadas ambas casillas. Funciona en un solo sentido; no usa un botón aparte.
-
-La salida tiene que estar libre y sin pintar. Si está ocupada por una Sombra o ya tiene luz, no puedo entrar en A. El intento no consume el turno.
-
-El primer caso separa el tablero en dos sectores: para seguir hay que usar el teleporter. El segundo suma una compuerta y una Sombra.
-
-En los niveles aparece después de las compuertas. Primero enseño el salto; después lo combino con las decisiones del recorrido. Hay que terminar el sector de entrada antes de dejarlo atrás.
-
-## Piso negro fijo
-
-El piso negro no se puede pisar ni pintar. Tampoco cuenta para completar el nivel. Es distinto del piso azul oscuro, que sí se puede recorrer y todavía espera luz.
-
-La primera sala pone un bloque negro en el centro. Obliga a rodearlo y permite ver que la victoria no exige pintarlo. La siguiente combina ese desvío con el teleporter.
-
-En PuzzleScript uso un objeto separado, Void, en la capa de colisión. No lleva Dark, por lo que queda fuera de la cuenta de casillas pendientes.
-
-La forma del piso pasa a ser otra herramienta para diseñar los niveles: puedo cortar atajos y separar recorridos sin sumar una acción al jugador.
-
-## Aprender jugando
-
-Armé un recorrido de 22 niveles jugables. La dificultad sube al combinar reglas que ya aparecieron. Cada presentación tiene una indicación breve junto al tablero y una situación donde se ve qué cambia.
-
-1–3. Qué aprende el jugador: Pintar, no volver por la luz y corregir un recorrido. Cómo lo presento: Un pasillo, un giro y una sala con varias opciones. Flechas para moverse; Z y R para probar otra vez.
-
-4–6. Qué aprende el jugador: Sombra y Pulso. Cómo lo presento: Una Sombra al lado para probar X, una patrulla y después dos Sombras.
-
-7–9. Qué aprende el jugador: Sello y compuerta. Cómo lo presento: Primero sin enemigos; después con una y dos Sombras.
-
-10–12. Qué aprende el jugador: Teleporter. Cómo lo presento: Dos sectores conectados por A → B; después compuerta y Sombras en la misma sala.
-
-13–14. Qué aprende el jugador: Piso negro fijo. Cómo lo presento: Un bloque que hay que rodear; después un recorrido que termina en un teleporter.
-
-15–16. Qué aprende el jugador: Elegir el orden con todo lo aprendido. Cómo lo presento: Compuerta, teleporter y piso negro, primero con dos Sombras y después con tres.
-
-### Qué tiene que quedar claro
-
-Pintar una casilla cierra el regreso. Un intento bloqueado no cambia el turno.
-
-Pulso disipa las Sombras vecinas, pero todavía hay que pintar su piso.
-
-El sello abre la compuerta; abrirla no pinta la casilla que ocupa.
-
-A lleva a B en un sentido. Conviene terminar el sector antes de salir.
-
-El piso negro es un obstáculo permanente, no una casilla pendiente.
-
-### Qué falta probar con jugadores
-
-Las 22 salas tienen solución comprobada en PuzzleScript. Ya tengo comentarios de Diego D y Vanesa. Me falta una prueba completa de esta versión para revisar cómo se aprende y cómo se siente la dificultad.
-
-Voy a mirar dónde alguien necesita una explicación, si descubre Pulso en su primera aparición y si entiende A → B antes de encontrarlo junto a una Sombra. Si un nivel confunde, cambio su disposición o su indicación antes de aumentar la dificultad.
-
-Me falta reproducir el bloqueo diagonal del nivel 4 y ver jugar las salas nuevas. Voy a anotar intentos, ayudas y dónde se traban.
-
-## El tramo avanzado y el pulido
-
-17–22. Agregué seis salas de 56 casillas y tres Sombras. Combinan compuerta, salto y piso negro, con paredes que cambian las rutas. Todas tienen solución. Me falta ver cómo las resuelven otras personas.
-
-La primera presentación de Pulso ahora dice la tecla y qué cambia: usar X, Espacio o el botón desde una casilla vecina disipa la Sombra; después hay que entrar para pintar. Ajusté la ambigüedad señalada en el feedback de Diego D sin mostrar un recorrido.
-
-La web tiene efectos originales sintetizados de paso, bloqueo, Pulso, apertura, salto, deshacer, reinicio y victoria, más una secuencia musical ambiental. Sonido y música se activan por separado y recuerdan su preferencia. La música se detiene con la pestaña oculta. Si no hay soporte de audio, el juego conserva sus controles.
-
-Agregué una barra de iluminación, el número de nivel y una respuesta visual breve al movimiento y a Pulso. Las animaciones respetan la preferencia de movimiento reducido.
-
-En v1.2.0 comprobé 37 casos con victoria: las 22 salas y 15 casos de los estudios. Las versiones anteriores del código se conservan.
-
-
-
+La revisión final fue interna. No se registró una nueva sesión con jugadores. El feedback queda respondido en la planilla y el Gantt cierra con cero horas restantes.

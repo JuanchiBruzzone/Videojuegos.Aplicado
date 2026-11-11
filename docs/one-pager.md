@@ -32,7 +32,7 @@ El personaje recorre las salas para recuperar las constelaciones del observatori
 
 ## Estética
 
-Sprites pequeños, luz cálida y piso azul oscuro. El piso negro se distingue como un obstáculo permanente. Los sellos y el teleporter tienen marcas propias. La web incorpora efectos breves para pasos, Pulso, apertura, viaje y victoria, además de música ambiental original. Sonido y música tienen controles independientes y se activan a pedido.
+Sprites pequeños, luz cálida y piso azul oscuro. El piso negro, los sellos y el teleporter tienen marcas propias. Los sonidos están incluidos en PuzzleScript: pasos, Pulso, apertura, salto y victoria, con señales tonales breves al iniciar y completar una sala.
 
 
 

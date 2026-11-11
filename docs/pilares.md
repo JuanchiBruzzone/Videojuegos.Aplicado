@@ -6,7 +6,7 @@ Juan Ignacio Bruzzone · Diseño de Juegos Aplicado
 
 ### Tiempo
 
-Quiero terminar una campaña que pueda hacer y revisar solo. El plan original es de 12 horas: 11 para niveles y pruebas y una para ajustes. Ahora el juego tiene 22 salas. Antes de seguir agregando cosas, me falta probarlas con otras personas y ajustar lo que no funcione.
+La entrega está cerrada con 22 salas. El Gantt queda con cero horas restantes. Priorizo una campaña que pueda revisar y mantener solo.
 
 ### Inversión
 
@@ -34,7 +34,7 @@ Un jugador, movimiento en cuatro direcciones y el tablero a la vista. Mantengo c
 
 ### Plataforma
 
-El juego se juega en el navegador, con teclado o botones. Las reglas corren en el motor oficial de PuzzleScript. La web agrega la presentación, los controles y el audio. Publico los cambios en GitHub Pages.
+El juego está hecho en PuzzleScript oficial y se puede copiar completo al editor. Los sonidos y los sprites forman parte de ese programa. La web conserva los estudios y permite probar el resultado.
 
 ### Proceso
 
@@ -42,8 +42,8 @@ Diseño una sala, genero el programa y compruebo que tenga solución en el motor
 
 ### Know-how
 
-Ya tengo funcionando el piso, las Sombras, Pulso, compuertas y teleporter. También tengo scripts para generar los niveles y comprobar las soluciones. Me falta aprender de las partidas de otras personas: qué pistas ayudan, dónde se traban y cómo sienten la dificultad.
+Tengo funcionando el piso, las Sombras, Pulso, compuertas, teleporter y sonidos. Los scripts generan el programa y comprueban las soluciones. La revisión de cierre es interna; el feedback recibido de Diego D y Vanesa queda registrado en la planilla.
 
 ## Decisiones
 
-Me quedo con el observatorio porque recuperar luz tiene sentido en ese lugar. Aclaré Pulso desde su primera aparición y sumé seis salas avanzadas usando las reglas que ya estaban. El sonido y la música se pueden apagar.
+Me quedo con el observatorio porque recuperar luz tiene sentido en ese lugar. Aclaré Pulso desde su primera aparición y sumé seis salas avanzadas usando las reglas que ya estaban. El motor reproduce efectos y señales tonales breves al iniciar y completar una sala. No lleva una pista musical de fondo.

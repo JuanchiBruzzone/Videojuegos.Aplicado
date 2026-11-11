@@ -1,5 +1,5 @@
 // Fuente única de niveles, pistas y objetivos de diseño.
-export const GAME_VERSION = '1.2.0';
+export const GAME_VERSION = '1.2.1';
 export const campaign = [
   {
     "title": "La primera luz",
@@ -26,8 +26,8 @@ export const campaign = [
     "title": "Algo entre las estrellas",
     "hint": "Usá X, Espacio o Pulso junto a la Sombra. Después entrá en la casilla que despejaste.",
     "intro": "La Sombra ocupa una casilla que todavía necesita luz. Desde una casilla de al lado, usá X, Espacio o el botón Pulso para disiparla. Pulso no te mueve ni pinta: después entrá en su casilla.",
-    "focus": "Descubrir Pulso en una sala pequeña.",
-    "board": "#####\n#.SP#\n#...#\n#..##\n#####"
+    "focus": "Usar Pulso antes de avanzar, en un pasillo sin diagonales.",
+    "board": "#######\n#PS...#\n#######"
   },
   {
     "title": "La patrulla",

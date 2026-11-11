@@ -1,4 +1,4 @@
-import { campaign } from './campaign.js?v=1.2.0';
+import { campaign } from './campaign.js?v=1.2.1';
 export const stages = [
  {id:'01-luz',title:'Pintar al caminar',short:'El cambio del piso',question:'¿Cómo cambia la casilla que piso?',tag:'Pintar',description:'Cada paso deja una casilla iluminada. En esta prueba todavía puedo volver atrás.',levels:['Pintar y volver'],goal:'Recorré el piso y mirá cómo cambia. Acá podés volver por la luz.',theme:'dungeon',research:'01-luz.md'},
  {id:'02-victoria',title:'Completar el tablero',short:'La condición de victoria',question:'¿Cuándo termino el nivel?',tag:'Victoria',description:'El nivel se completa al pintar todas las casillas transitables.',levels:['Pintar todo'],goal:'Pintá las nueve casillas. La inicial ya cuenta.',theme:'dungeon',research:'02-victoria.md'},

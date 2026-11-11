@@ -1,5 +1,14 @@
 # Pasos de Luz — Versiones y cambios
 
+## v1.2.1 — Cierre de la entrega
+
+- Sonidos incorporados al programa de PuzzleScript y retirada la capa de audio independiente de la web.
+- Sala 4 convertida en un pasillo para enseñar Pulso y evitar el bloqueo diagonal.
+- Sprites del juego mejorados; 22 salas y 37 casos comprobados.
+- Gantt en cero, feedback respondido y documentos revisados.
+- Código vigente separado; versiones anteriores en old_versions. Maestro sin bloques de código.
+- El vertical slice corresponde a la entrega actual.
+
 ## v1.2.0 — Audio y tramo avanzado
 
 - Campaña de 22 salas: se conservan las primeras 16 y se agregan seis de 56 casillas con tres Sombras, paredes, huecos, compuerta y salto A → B.

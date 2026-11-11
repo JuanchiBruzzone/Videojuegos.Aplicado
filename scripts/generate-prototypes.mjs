@@ -13,45 +13,50 @@ Background
 #090d18
 
 Dark
-#1c2940 #33425e
+#1c2940 #33425e #718aac
 11111
 10001
-10001
+10201
 10001
 11111
 
 Light
-#f4c974 #72572f
+#f4c974 #72572f #fff0ba
 11111
-10001
-10001
-10001
+10201
+12221
+10201
 11111
 
 Wall
-#131b2b
+#131b2b #202c40
+11111
+10001
+10001
+10001
+11111
 
 Player
-#ecf8ff #90dcff
+#ecf8ff #90dcff #f4c974
 ..0..
 .000.
-00100
-.111.
+00102
+.1112
 1...1
 
 ShadowEast
-#a38aff #432b72
+#a38aff #432b72 #ede3ff
 ..0..
 .010.
-01110
+01210
 01110
 1.1.1
 
 ShadowWest
-#a38aff #432b72
+#a38aff #432b72 #ede3ff
 ..0..
 .010.
-01110
+01210
 01110
 1.1.1
 
@@ -80,6 +85,19 @@ Barrier = Wall or Light
 SOUNDS
 =======
 
+( Sonidos del juego: funcionan al copiar este programa en PuzzleScript. )
+Player Move 173007
+Cancel 473006
+Undo 273006
+Restart 373006
+StartLevel 153003
+EndLevel 563003
+EndGame 653000
+ShowMessage 873006
+CloseMessage 973006
+Sfx0 573003
+Sfx1 673005
+
 ================
 COLLISIONLAYERS
 ================
@@ -95,7 +113,7 @@ Trapped
 RULES
 ======
 `;
-const pulse = `[ action Player | Shade ] -> [ action Player Pulse | ]
+const pulse = `[ action Player | Shade ] -> [ action Player Pulse | ] sfx0
 [ action Player ] -> [ Player ]
 `;
 const block = `[ > Player | Light ] -> [ Player | Light ]
@@ -147,6 +165,7 @@ await mkdir('web/prototipos',{recursive:true});
 for (const s of specifications) {
  let programBase=base;
  if(s.gate)programBase=programBase.replace('=======\nLEGEND',`GateClosed\n#e8b998\n00000\n0.0.0\n0.0.0\n0.0.0\n00000\n\nGateOpen\n#9ce7d1\n00000\n0...0\n0...0\n0...0\n00000\n\nRune\n#9ce7d1\n..0..\n.0.0.\n0...0\n.0.0.\n..0..\n\n=======\nLEGEND`).replace('Barrier = Wall or Light','K = Rune and Dark\nG = GateClosed and Dark\nBarrier = Wall or Light or GateClosed').replace('Player, Wall, ShadowEast, ShadowWest','Player, Wall, ShadowEast, ShadowWest, GateClosed\nGateOpen\nRune');
+ if(s.gate)programBase=programBase.replace('Sfx1 673005','Sfx1 673005\nSfx2 773000');
  if(s.portal)programBase=programBase.replace('=======\nLEGEND',`PortalIn\n#72dce8\n.000.\n0...0\n0.000\n0...0\n.000.\n\nPortalOut\n#e2b7ff\n.000.\n0...0\n000.0\n0...0\n.000.\n\n=======\nLEGEND`).replace('. = Dark','. = Dark\nA = PortalIn and Dark\nB = PortalOut and Dark').replace('Trail\nPulse\nTrapped','PortalIn, PortalOut\nTrail\nPulse\nTrapped');
  if(s.void)programBase=programBase.replace('=======\nLEGEND',`Void\n#020305 #10151d\n11111\n10001\n10001\n10001\n11111\n\n=======\nLEGEND`).replace('. = Dark','. = Dark\n_ = Void').replace('Barrier = Wall or Light or GateClosed','Barrier = Wall or Light or GateClosed or Void').replace('Player, Wall, ShadowEast, ShadowWest, GateClosed','Player, Wall, ShadowEast, ShadowWest, GateClosed, Void');
  let rules=s.shade?pulse:'[ action Player ] -> [ Player ]\n';
@@ -160,14 +179,14 @@ late [ Trail ] -> [ ]
 late [ Pulse ] -> [ ]
 late [ Player Dark ] -> [ Player Light ]
 `;
- if(s.gate)rules+='late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ]\n';
+ if(s.gate)rules+='late [ Player Rune ] [ GateClosed ] -> [ Player Rune ] [ GateOpen ] sfx2\n';
  if(s.portal)rules+=`late [ Player PortalIn ] [ PortalOut Light ] -> cancel
 late [ Player PortalIn ] [ PortalOut Shade ] -> cancel
-late [ Player PortalIn ] [ PortalOut Dark no Shade ] -> [ PortalIn ] [ Player PortalOut Dark ]
+late [ Player PortalIn ] [ PortalOut Dark no Shade ] -> [ PortalIn ] [ Player PortalOut Dark ] sfx1
 late [ Player Dark ] -> [ Player Light ]
 `;
  if(s.trap)rules+=s.gate?trapped.replaceAll('| Dark ]','| Dark no GateClosed ]'):trapped;
- const source=`title Pasos de Luz - ${s.name}\n`+programBase+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.map((board,index)=>s.id==='11-progresion'&&campaign[index].intro?`message ${campaign[index].intro}\n\n${board}`:board).join('\n\n')+'\n';
+ const source=`title ${s.id==='11-progresion'?'Pasos de Luz':`Pasos de Luz - ${s.name}`}\n`+programBase+rules+`\n==============\nWINCONDITIONS\n==============\n\n${s.win?'no Dark':''}\n\n=======\nLEVELS\n=======\n\n`+s.boards.map((board,index)=>s.id==='11-progresion'&&campaign[index].intro?`message ${campaign[index].intro}\n\n${board}`:board).join('\n\n')+'\n';
  await writeFile(`web/prototipos/${s.id}.puzzlescript`,source);
 }
 console.log(`${specifications.length} prototipos de PuzzleScript generados.`);

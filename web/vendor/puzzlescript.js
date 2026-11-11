@@ -15916,6 +15916,12 @@ consolePrintFromRule=function(){};
 consoleCacheDump=function(){};
 UnitTestingThrow=function(e){throw e;};
 let initialSource='', loadedIndex=0, playableLevels=[], levelIntro='';
+let emittedSounds=[],previewAudio=false;
+const originalPlaySound=playSound;
+playSound=function(seed,ignore){
+ emittedSounds.push(Number(seed));
+ if(previewAudio&&!document.hidden){try{originalPlaySound(seed,ignore);}catch{previewAudio=false;}}
+};
 function snapshot(){
  const cells=[];
  for(let y=0;y<level.height;y++) for(let x=0;x<level.width;x++){
@@ -15923,11 +15929,11 @@ function snapshot(){
   for(const [name,obj] of Object.entries(state.objects)) if(bits.get(obj.id)) names.push(name);
   cells.push({x,y,names});
  }
- return {width:level.width,height:level.height,cells,won:winning,undo:backups.length,levels:playableLevels.length,intro:levelIntro,errors:errorStrings.slice(),objects:Array.from(level.objects)};
+ return {width:level.width,height:level.height,cells,won:winning,undo:backups.length,levels:playableLevels.length,intro:levelIntro,errors:errorStrings.slice(),objects:Array.from(level.objects),sounds:emittedSounds.slice()};
 }
 globalThis.PuzzleLab={
  load(source,index=0){
-  initialSource=source;loadedIndex=index;unitTesting=false;lazyFunctionGeneration=false;
+  const previousAudio=previewAudio;previewAudio=false;emittedSounds=[];initialSource=source;loadedIndex=index;unitTesting=false;lazyFunctionGeneration=false;
   compile(['loadLevel',0],source,'pasos-de-luz');
   if(errorCount)throw new Error(errorStrings.join('\n'));
   playableLevels=[];let messages=[];
@@ -15938,11 +15944,12 @@ globalThis.PuzzleLab={
   const target=playableLevels[index];
   if(!target)throw new Error('Nivel fuera del recorrido.');
   levelIntro=target.intro;loadLevelFromState(state,target.rawIndex);
-  return snapshot();
+  emittedSounds=[];previewAudio=previousAudio;tryPlayStartLevelSound();return snapshot();
  },
- input(dir){if(!winning)processInput(dir);return snapshot();},
- undo(){DoUndo(true,true);winning=false;return snapshot();},
- restart(){return this.load(initialSource,loadedIndex);},
+ input(dir){emittedSounds=[];if(!winning)processInput(dir);return snapshot();},
+ undo(){emittedSounds=[];const available=backups.length;DoUndo(true,true);winning=false;if(available)tryPlayUndoSound();return snapshot();},
+ restart(){const previousAudio=previewAudio;previewAudio=false;this.load(initialSource,loadedIndex);previewAudio=previousAudio;emittedSounds=[];tryPlayRestartSound();return snapshot();},
+ setSoundEnabled(value){previewAudio=!!value;if(previewAudio){checkAudioContextExists();AUDIO_CONTEXT?.resume?.().catch(()=>{});}return previewAudio;},
  snapshot,
- restore(objects){level.objects=new Int32Array(objects);winning=false;RebuildLevelArrays();return snapshot();}
+ restore(objects){emittedSounds=[];level.objects=new Int32Array(objects);winning=false;RebuildLevelArrays();return snapshot();}
 };

@@ -6,9 +6,6 @@ const verification=JSON.parse(await readFile('web/data/verification.json','utf8'
 if(verification.version!==GAME_VERSION)throw new Error('Primero verificá los niveles de esta versión.');
 const results=verification.results.filter(r=>r.id==='11-progresion');
 if(results.length!==campaign.length||results.some(r=>!r.verified))throw new Error('Falta verificar la campaña completa.');
-const [changes,previous,intermediate]=await Promise.all([
- readFile('docs/cambios.md','utf8'),readFile('docs/versiones/pasos-de-luz-v1.0.0.md','utf8'),readFile('docs/versiones/pasos-de-luz-v1.1.0.md','utf8'),
-]);
 const table=campaign.map((level,i)=>{
  const r=results.find(r=>r.level===i);
  return `| ${i+1} | ${level.title} | ${r.tiles} | ${r.shadows} | ${level.focus} |`;
@@ -21,7 +18,7 @@ Juan Ignacio Bruzzone · Diseño de Juegos Aplicado
 
 Copiá solamente el bloque PuzzleScript completo en el editor de PuzzleScript. Incluye las cinco pantallas de pistas y las ${campaign.length} salas. En la web se ejecuta este mismo programa con el motor oficial.
 
-Flechas o WASD: movimiento. X o Espacio: Pulso. Z: deshacer. R: reiniciar. En las pantallas de pista, Enter, Espacio o el botón permiten continuar. La web agrega efectos y música originales sintetizados con Web Audio, con controles independientes y preferencias guardadas. El audio se activa a pedido y no cambia las reglas. Esa capa de audio pertenece a la web y no al bloque PuzzleScript.
+Flechas o WASD: movimiento. X o Espacio: Pulso. Z: deshacer. R: reiniciar. En las pantallas de pista, Enter, Espacio o el botón permiten continuar. Los sonidos están incluidos en SOUNDS y en las reglas: pasos, Pulso, compuerta, salto, deshacer, reinicio y victoria. Al comenzar y completar una sala se oyen señales tonales breves del motor. El programa no usa archivos de audio externos ni música de fondo.
 
 Objetivo: iluminar todo el piso transitable. La luz no se puede volver a pisar. Pulso disipa todas las Sombras ortogonales vecinas sin mover al jugador ni pintar. El sello abre la compuerta. El viaje A → B pinta ambos extremos y requiere una salida libre y oscura; de lo contrario se cancela el turno completo. El piso negro no se pisa y no cuenta para ganar.
 
@@ -42,7 +39,5 @@ Se encontraron y reprodujeron soluciones para las ${campaign.length} salas y los
 \`\`\`puzzlescript
 ${code}\`\`\`
 `;
-await mkdir('docs/versiones',{recursive:true});
-await writeFile(`docs/versiones/pasos-de-luz-v${GAME_VERSION}.md`,current);
-await writeFile('docs/pasos-de-luz-codigo.md',current+'\n'+changes.replace(/^# /,'## ')+'\n## Código de versiones anteriores\n\n'+intermediate.replace(/^# /,'### ')+'\n'+previous.replace(/^# /,'### '));
-console.log(`Markdown actualizado: v${GAME_VERSION}, campaña y versiones anteriores conservadas.`);
+await writeFile('docs/pasos-de-luz-codigo.md',current);
+console.log(`Código vigente actualizado: v${GAME_VERSION}. Las versiones anteriores están en docs/old_versions/.`);

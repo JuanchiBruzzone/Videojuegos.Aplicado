@@ -1,10 +1,10 @@
 {
   "folderId": "1rVpBfMZ6sYb2JhB2VF0uTCmDs0YGkdHq",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "files": {
     "code": {
       "id": "1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_",
-      "url": "https://drive.google.com/file/d/1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_/view?usp=drivesdk",
+      "url": "https://drive.google.com/file/d/1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_/view",
       "source": "docs/pasos-de-luz-codigo.md"
     },
     "feedback": {
@@ -50,6 +50,25 @@
       "url": "https://docs.google.com/document/d/12ipp_OEbfiu44vDaXs30RaV3pqQidQ-FUhxg5mEtUYQ",
       "mimeType": "application/vnd.google-apps.document",
       "source": "docs/scope-drive.md"
+    },
+    "oldVersions": {
+      "folderId": "11pzil68oWgVsZO9GP-ajJk5fHBN6ggSB",
+      "url": "https://drive.google.com/drive/folders/11pzil68oWgVsZO9GP-ajJk5fHBN6ggSB",
+      "source": "docs/old_versions/",
+      "files": [
+        {
+          "version": "1.0.0",
+          "id": "1Wbtqy-GtgN1Xa1tPVVyFj6BZejhU2Voq"
+        },
+        {
+          "version": "1.1.0",
+          "id": "1SrAOLjBQ9MN-_hxQdIhFeCXb-VAYU4IN"
+        },
+        {
+          "version": "1.2.0",
+          "id": "1uKiaD9Epzk2t6VSyN8n72D-xvCK3tyCK"
+        }
+      ]
     }
   },
   "updatePolicy": "Código: actualizar los bytes del mismo ID con update_file. Feedback: editar los rangos de la planilla nativa con batch_update_spreadsheet, conservando el mismo ID."

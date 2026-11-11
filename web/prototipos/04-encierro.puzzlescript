@@ -12,45 +12,50 @@ Background
 #090d18
 
 Dark
-#1c2940 #33425e
+#1c2940 #33425e #718aac
 11111
 10001
-10001
+10201
 10001
 11111
 
 Light
-#f4c974 #72572f
+#f4c974 #72572f #fff0ba
 11111
-10001
-10001
-10001
+10201
+12221
+10201
 11111
 
 Wall
-#131b2b
+#131b2b #202c40
+11111
+10001
+10001
+10001
+11111
 
 Player
-#ecf8ff #90dcff
+#ecf8ff #90dcff #f4c974
 ..0..
 .000.
-00100
-.111.
+00102
+.1112
 1...1
 
 ShadowEast
-#a38aff #432b72
+#a38aff #432b72 #ede3ff
 ..0..
 .010.
-01110
+01210
 01110
 1.1.1
 
 ShadowWest
-#a38aff #432b72
+#a38aff #432b72 #ede3ff
 ..0..
 .010.
-01110
+01210
 01110
 1.1.1
 
@@ -78,6 +83,19 @@ Barrier = Wall or Light
 =======
 SOUNDS
 =======
+
+( Sonidos del juego: funcionan al copiar este programa en PuzzleScript. )
+Player Move 173007
+Cancel 473006
+Undo 273006
+Restart 373006
+StartLevel 153003
+EndLevel 563003
+EndGame 653000
+ShowMessage 873006
+CloseMessage 973006
+Sfx0 573003
+Sfx1 673005
 
 ================
 COLLISIONLAYERS

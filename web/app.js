@@ -1,14 +1,12 @@
-import {stages} from './data/stages.js?v=1.2.0';
+import {stages} from './data/stages.js?v=1.2.1';
 import {markdown} from './markdown.js';
-import {createAudio,transitionSound} from './audio.js';
-const CONTENT_VERSION='1.2.0';
+const CONTENT_VERSION='1.2.1';
 const $=id=>document.getElementById(id);
-let audioStorage;try{audioStorage=localStorage;}catch{}
-const audio=createAudio({AudioContext:window.AudioContext||window.webkitAudioContext,storage:audioStorage});
-function audioLabels(){for(const kind of ['sound','music']){const b=$(kind+'-toggle');b.setAttribute('aria-pressed',String(audio.enabled[kind]));b.textContent=`${kind==='sound'?'Sonido':'Música'}: ${audio.enabled[kind]?'sí':'no'}`;b.disabled=!audio.available;if(!audio.available)b.title='Este navegador no permite audio sintetizado.';}}
-for(const kind of ['sound','music'])$(kind+'-toggle').onclick=()=>{audio.toggle(kind);audioLabels();};
+let soundEnabled=false;
+try{soundEnabled=localStorage.getItem('pasos-native-sound')==='true';}catch{}
+function audioLabels(){const b=$('sound-toggle');b.setAttribute('aria-pressed',String(soundEnabled));b.textContent=`Sonido: ${soundEnabled?'sí':'no'}`;}
+$('sound-toggle').onclick=()=>{soundEnabled=!soundEnabled;PuzzleLab.setSoundEnabled(soundEnabled);try{localStorage.setItem('pasos-native-sound',String(soundEnabled));}catch{}audioLabels();};
 audioLabels();
-document.addEventListener?.('visibilitychange',()=>audio.setVisible(!document.hidden));
 let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, theme='observatory';
 let effectStarted=0,effectType='';
 let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, pendingIntro=false, verification={results:[]}, completed=new Set(), campaignCompleted=new Set();
@@ -118,7 +116,7 @@ function update(){
 }
 function input(direction){
  if(!boardState||section!=='prototipado'||boardState.won||$('intro-screen').open)return;
- audio.unlock();const before=boardState;boardState=PuzzleLab.input(direction);if(!same(before,boardState))actions++;effectType=transitionSound(before,boardState,direction);if(effectType!=='blocked')effectStarted=Date.now();audio.play(effectType);update();
+ PuzzleLab.setSoundEnabled(soundEnabled);const before=boardState;boardState=PuzzleLab.input(direction);if(!same(before,boardState))actions++;effectType=boardState.won?'win':direction===4?'pulse':'step';if(!same(before,boardState))effectStarted=Date.now();update();
 }
 function draw(){
  const rect=canvas.getBoundingClientRect();if(rect.width<1||!boardState)return;
@@ -170,8 +168,8 @@ document.querySelectorAll('[data-input]').forEach(b=>b.onclick=()=>input(Number(
 document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{section=b.dataset.section;route();});
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;route();});
 document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{theme=b.dataset.theme;document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('active',x===b));update();});
-$('undo').onclick=()=>{if(boardState&&!$('intro-screen').open&&boardState.undo){boardState=PuzzleLab.undo();actions=Math.max(0,actions-1);audio.play('undo');update();}};
-$('restart').onclick=()=>{if(boardState&&!$('intro-screen').open){boardState=PuzzleLab.restart();actions=0;audio.play('restart');update();}};
+$('undo').onclick=()=>{if(boardState&&!$('intro-screen').open&&boardState.undo){boardState=PuzzleLab.undo();actions=Math.max(0,actions-1);update();}};
+$('restart').onclick=()=>{if(boardState&&!$('intro-screen').open){boardState=PuzzleLab.restart();actions=0;update();}};
 $('level-select').onchange=e=>{levelIndex=Number(e.target.value);route();};
 $('solution-toggle').onclick=solution;
 $('next-level').onclick=()=>{if(boardState?.won&&levelIndex<selected.levels.length-1){levelIndex++;route();canvas.focus({preventScroll:true});window.scrollTo({top:0,behavior:'smooth'});}};

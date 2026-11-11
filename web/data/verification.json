@@ -1,6 +1,6 @@
 {
   "engine": "PuzzleScript oficial",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "method": "Búsqueda con descarte de piso aislado y reproducción de cada solución en el mismo motor del sitio. Las métricas describen el recorrido encontrado; no miden dificultad percibida por personas.",
   "results": [
     {
@@ -380,22 +380,19 @@
       "id": "11-progresion",
       "level": 3,
       "inputs": [
-        2,
-        1,
-        2,
-        1,
-        0,
         4,
-        0,
+        3,
+        3,
+        3,
         3
       ],
-      "solution": "↓ ← ↓ ← ↑ Pulso ↑ →",
-      "states": 10,
-      "tiles": 8,
+      "solution": "Pulso → → → →",
+      "states": 5,
+      "tiles": 5,
       "shadows": 1,
-      "routeChoices": 1,
+      "routeChoices": 0,
       "immediateTraps": 0,
-      "losingChoices": 1,
+      "losingChoices": 0,
       "verified": true
     },
     {
