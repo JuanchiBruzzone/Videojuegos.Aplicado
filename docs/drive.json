@@ -1,6 +1,6 @@
 {
   "folderId": "1rVpBfMZ6sYb2JhB2VF0uTCmDs0YGkdHq",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "files": {
     "code": {
       "id": "1Kee4OBa8TfaSdSPQ6vLZVS0SlfVZGiu_",
@@ -12,9 +12,44 @@
       "url": "https://docs.google.com/spreadsheets/d/1t--fFLI9ZQ5oaVTt8CZsZMpleBgPVXPXw7JNlcznKWs/edit",
       "mimeType": "application/vnd.google-apps.spreadsheet",
       "ranges": {
-        "Feedback": "A1:K9",
-        "Objetivos de testeo": "A1:D8"
+        "Feedback": "A1:K20",
+        "Objetivos de testeo": "A1:D12"
       }
+    },
+    "gantt": {
+      "id": "19ap1aBHbOc_YoAgADywLEHryXbitf_iOpP0NDtCuGGs",
+      "url": "https://docs.google.com/spreadsheets/d/19ap1aBHbOc_YoAgADywLEHryXbitf_iOpP0NDtCuGGs/edit",
+      "mimeType": "application/vnd.google-apps.spreadsheet"
+    },
+    "pillars": {
+      "id": "1Hg0jER3_Hf34ljvmlYqT8F1PNk0URcP_ieJv-WbjKZw",
+      "url": "https://docs.google.com/document/d/1Hg0jER3_Hf34ljvmlYqT8F1PNk0URcP_ieJv-WbjKZw/edit?usp=drivesdk",
+      "mimeType": "application/vnd.google-apps.document",
+      "source": "docs/pilares.md"
+    },
+    "master": {
+      "id": "17RpoafVfJv6v4cPIQq3Ft8zj4uHjgirv-vxgiAnCpew",
+      "url": "https://docs.google.com/document/d/17RpoafVfJv6v4cPIQq3Ft8zj4uHjgirv-vxgiAnCpew/edit?usp=drivesdk",
+      "mimeType": "application/vnd.google-apps.document",
+      "source": "docs/documento-maestro.md"
+    },
+    "onePager": {
+      "id": "1rtd6J7tHhZZ-yf-wx6YpbYO2Lm6kz8gFf53_4XbRBko",
+      "url": "https://docs.google.com/document/d/1rtd6J7tHhZZ-yf-wx6YpbYO2Lm6kz8gFf53_4XbRBko",
+      "mimeType": "application/vnd.google-apps.document",
+      "source": "docs/one-pager.md"
+    },
+    "prototype": {
+      "id": "1VO9SVkcgFooPpxBt5TRtI9nicg-g1jH6EgNndaxM03c",
+      "url": "https://docs.google.com/document/d/1VO9SVkcgFooPpxBt5TRtI9nicg-g1jH6EgNndaxM03c",
+      "mimeType": "application/vnd.google-apps.document",
+      "source": "docs/prototipado-drive.md"
+    },
+    "scope": {
+      "id": "12ipp_OEbfiu44vDaXs30RaV3pqQidQ-FUhxg5mEtUYQ",
+      "url": "https://docs.google.com/document/d/12ipp_OEbfiu44vDaXs30RaV3pqQidQ-FUhxg5mEtUYQ",
+      "mimeType": "application/vnd.google-apps.document",
+      "source": "docs/scope-drive.md"
     }
   },
   "updatePolicy": "Código: actualizar los bytes del mismo ID con update_file. Feedback: editar los rangos de la planilla nativa con batch_update_spreadsheet, conservando el mismo ID."

@@ -1,8 +1,16 @@
-import {stages} from './data/stages.js?v=1.1.0';
+import {stages} from './data/stages.js?v=1.2.0';
 import {markdown} from './markdown.js';
-const CONTENT_VERSION='1.1.0';
+import {createAudio,transitionSound} from './audio.js';
+const CONTENT_VERSION='1.2.0';
 const $=id=>document.getElementById(id);
+let audioStorage;try{audioStorage=localStorage;}catch{}
+const audio=createAudio({AudioContext:window.AudioContext||window.webkitAudioContext,storage:audioStorage});
+function audioLabels(){for(const kind of ['sound','music']){const b=$(kind+'-toggle');b.setAttribute('aria-pressed',String(audio.enabled[kind]));b.textContent=`${kind==='sound'?'Sonido':'Música'}: ${audio.enabled[kind]?'sí':'no'}`;b.disabled=!audio.available;if(!audio.available)b.title='Este navegador no permite audio sintetizado.';}}
+for(const kind of ['sound','music'])$(kind+'-toggle').onclick=()=>{audio.toggle(kind);audioLabels();};
+audioLabels();
+document.addEventListener?.('visibilitychange',()=>audio.setVisible(!document.hidden));
 let selected=stages.at(-1), view='juego', section='prototipado', levelIndex=0, theme='observatory';
+let effectStarted=0,effectType='';
 let boardState=null, actions=0, sourceText='', initialShadows=0, sequence=0, pendingIntro=false, verification={results:[]}, completed=new Set(), campaignCompleted=new Set();
 try{completed=new Set(JSON.parse(localStorage.getItem('pasos-completed')||'[]'));}catch{}
 try{campaignCompleted=new Set(JSON.parse(localStorage.getItem('pasos-campaign-levels-1.1')||'[]'));}catch{}
@@ -92,6 +100,7 @@ function update(){
  $('status-title').textContent=boardState.won?'Constelación completa':trapped?'Este camino quedó cerrado':initialShadows&&!shadows?'Sin Sombras':'El recorrido sigue';
  $('status-count').textContent=`${lit} / ${lit+dark} iluminadas`;
  $('turn-count').textContent=`${actions} ${actions===1?'acción':'acciones'}`;
+ $('light-progress').value=lit;$('light-progress').max=lit+dark;
  $('status-dot').classList.toggle('warn',trapped);
  $('board-message').hidden=!boardState.won&&!trapped;
  $('board-message').classList.toggle('trapped',trapped);
@@ -104,11 +113,12 @@ function update(){
  $('engine-state').textContent='Hecho en PuzzleScript';
  if(boardState.won&&selected.campaign&&!campaignCompleted.has(levelIndex)){campaignCompleted.add(levelIndex);try{localStorage.setItem('pasos-campaign-levels-1.1',JSON.stringify([...campaignCompleted]));}catch{}}
  if(boardState.won&&(!selected.campaign||campaignCompleted.size===selected.levels.length)&&!completed.has(selected.id)){completed.add(selected.id);try{localStorage.setItem('pasos-completed',JSON.stringify([...completed]));}catch{}renderNav();}
+ $('level-progress').textContent=selected.campaign?`Nivel ${levelIndex+1} de ${selected.levels.length} · ${campaignCompleted.size} completados`:'';
  draw();
 }
 function input(direction){
  if(!boardState||section!=='prototipado'||boardState.won||$('intro-screen').open)return;
- const before=boardState;boardState=PuzzleLab.input(direction);if(!same(before,boardState))actions++;update();
+ audio.unlock();const before=boardState;boardState=PuzzleLab.input(direction);if(!same(before,boardState))actions++;effectType=transitionSound(before,boardState,direction);if(effectType!=='blocked')effectStarted=Date.now();audio.play(effectType);update();
 }
 function draw(){
  const rect=canvas.getBoundingClientRect();if(rect.width<1||!boardState)return;
@@ -142,11 +152,14 @@ function draw(){
    ctx.shadowColor='#a284ff';ctx.shadowBlur=22;ctx.fillStyle='#8d73bf';ctx.beginPath();ctx.moveTo(cx,cy-17);ctx.bezierCurveTo(cx+15,cy-13,cx+17,cy+8,cx+12,cy+18);ctx.lineTo(cx+5,cy+12);ctx.lineTo(cx,cy+19);ctx.lineTo(cx-6,cy+12);ctx.lineTo(cx-13,cy+18);ctx.bezierCurveTo(cx-17,cy+7,cx-14,cy-13,cx,cy-17);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#dfd2ff';ctx.fillRect(cx-7,cy-3,4,4);ctx.fillRect(cx+3,cy-3,4,4);
   }
   if(cell.names.includes('player')){
+   const phase=Math.min(1,(Date.now()-effectStarted)/360);
+   if(phase<1&&!matchMedia('(prefers-reduced-motion: reduce)').matches){ctx.translate(0,-Math.sin(phase*Math.PI)*3);if(effectType==='pulse'||effectType==='win'){ctx.strokeStyle=`rgba(205,184,255,${1-phase})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,20+phase*38,0,Math.PI*2);ctx.stroke();}}
    ctx.fillStyle='#101d3077';ctx.beginPath();ctx.ellipse(cx,cy+19,15,5,0,0,Math.PI*2);ctx.fill();
    ctx.shadowColor='#d5f0ff';ctx.shadowBlur=12;ctx.fillStyle='#b8dbea';ctx.beginPath();ctx.moveTo(cx,cy-14);ctx.lineTo(cx+11,cy+16);ctx.lineTo(cx-11,cy+16);ctx.closePath();ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#eef8ff';ctx.beginPath();ctx.arc(cx,cy-14,7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#f2f9ff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx+13,cy-2);ctx.lineTo(cx+13,cy+19);ctx.stroke();ctx.fillStyle='#ffe2a3';ctx.shadowColor='#ffe2a3';ctx.shadowBlur=10;ctx.fillRect(cx+10,cy,6,8);ctx.shadowBlur=0;
   }
   ctx.restore();
  }
+ if(Date.now()-effectStarted<360&&!matchMedia('(prefers-reduced-motion: reduce)').matches)requestAnimationFrame(draw);
 }
 function solution(){
  const found=verification.results.find(r=>r.id===selected.id&&r.level===levelIndex);
@@ -157,8 +170,8 @@ document.querySelectorAll('[data-input]').forEach(b=>b.onclick=()=>input(Number(
 document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{section=b.dataset.section;route();});
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;route();});
 document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{theme=b.dataset.theme;document.querySelectorAll('[data-theme]').forEach(x=>x.classList.toggle('active',x===b));update();});
-$('undo').onclick=()=>{if(boardState){boardState=PuzzleLab.undo();actions=Math.max(0,actions-1);update();}};
-$('restart').onclick=()=>{if(boardState){boardState=PuzzleLab.restart();actions=0;update();}};
+$('undo').onclick=()=>{if(boardState&&!$('intro-screen').open&&boardState.undo){boardState=PuzzleLab.undo();actions=Math.max(0,actions-1);audio.play('undo');update();}};
+$('restart').onclick=()=>{if(boardState&&!$('intro-screen').open){boardState=PuzzleLab.restart();actions=0;audio.play('restart');update();}};
 $('level-select').onchange=e=>{levelIndex=Number(e.target.value);route();};
 $('solution-toggle').onclick=solution;
 $('next-level').onclick=()=>{if(boardState?.won&&levelIndex<selected.levels.length-1){levelIndex++;route();canvas.focus({preventScroll:true});window.scrollTo({top:0,behavior:'smooth'});}};

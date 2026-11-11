@@ -1,5 +1,6 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 import { engine, source, at } from '../tests/engine-helper.mjs';
+import { GAME_VERSION } from '../web/data/campaign.js';
 import { solveLevel, reachableFloor } from './solve-level.mjs';
 const ids=['02-victoria','03-recorrido','04-encierro','05-sombra','06-contexto','07-feedback','08-compuertas','09-teleporter','10-piso-negro','11-progresion'];
 const labels=['↑','←','↓','→','Pulso'];
@@ -28,5 +29,5 @@ for(const id of ids){
  }
 }
 await mkdir('web/data',{recursive:true});
-await writeFile('web/data/verification.json',JSON.stringify({engine:'PuzzleScript oficial',version:'1.1.0',method:'Búsqueda con descarte de piso aislado y reproducción de cada solución en el mismo motor del sitio. Las métricas describen el recorrido encontrado; no miden dificultad percibida por personas.',results},null,2)+'\n');
+await writeFile('web/data/verification.json',JSON.stringify({engine:'PuzzleScript oficial',version:GAME_VERSION,method:'Búsqueda con descarte de piso aislado y reproducción de cada solución en el mismo motor del sitio. Las métricas describen el recorrido encontrado; no miden dificultad percibida por personas.',results},null,2)+'\n');
 console.log(`${results.length} niveles con solución encontrada y reproducida.`);

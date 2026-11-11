@@ -6,7 +6,7 @@ El jugador pinta las casillas al caminar y ya no puede volver por ellas. Pulso d
 
 [**Jugar y leer el prototipado**](https://juanchibruzzone.github.io/Videojuegos.Aplicado/web/index.html) · [**Scope**](web/research/scope.md)
 
-La versión 1.1.0 reúne las pruebas de cada regla y un recorrido de 16 niveles: dos salas iniciales breves, pistas entre mecánicas y un cierre de 46 casillas con tres Sombras. Las soluciones están comprobadas en el motor de PuzzleScript. Falta probar el aprendizaje y ajustar la dificultad con jugadores.
+La versión 1.2.0 reúne las pruebas de cada regla y 22 niveles: dos salas iniciales breves, pistas entre mecánicas, el cierre original de 46 casillas y seis salas avanzadas de 56 casillas con tres Sombras. La web agrega efectos y música originales sintetizados, opcionales e independientes. Las soluciones están comprobadas en el motor de PuzzleScript. Falta probar el aprendizaje y ajustar la dificultad con jugadores.
 
 ## Documentos
 
@@ -46,3 +46,12 @@ Las reglas están en [web/prototipos](web/prototipos), las explicaciones en [web
 El workflow de Pages comprueba las reglas, prepara `dist/` y publica el sitio. No requiere secretos propios.
 
 PuzzleScript es de Stephen Lavelle. Se incluye su [licencia MIT](web/vendor/PUZZLESCRIPT-LICENSE.txt) y la [procedencia del motor](web/vendor/origen.json).
+
+## Documentación consolidada
+
+- [Documento maestro](docs/documento-maestro.md): concepto, pilares, diseño, prototipado, Scope, progresión, testing y fuentes.
+- [Pilares](docs/pilares.md) y [diseño y pruebas](docs/diseno-y-validacion.md).
+- [Inventario de cambios](docs/inventario-v1.2.0.md).
+- Los IDs estables de Docs y Sheets se registran en [Drive](docs/drive.json). Los originales sueltos se conservan.
+
+El audio se activa a pedido con Sonido y Música. Es una capa de la web; copiar únicamente la fuente PuzzleScript no incluye esa capa. No necesita descargas ni dependencias adicionales.

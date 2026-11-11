@@ -1,5 +1,5 @@
 // Fuente única de niveles, pistas y objetivos de diseño.
-export const GAME_VERSION = '1.1.0';
+export const GAME_VERSION = '1.2.0';
 export const campaign = [
   {
     "title": "La primera luz",
@@ -24,8 +24,8 @@ export const campaign = [
   },
   {
     "title": "Algo entre las estrellas",
-    "hint": "X o Espacio: hay respuestas que no necesitan un paso.",
-    "intro": "Entre las estrellas se mueve algo que no responde a tus pasos de la misma manera. A veces, quedarse cerca y hacer un pulso dice más que avanzar.",
+    "hint": "Usá X, Espacio o Pulso junto a la Sombra. Después entrá en la casilla que despejaste.",
+    "intro": "La Sombra ocupa una casilla que todavía necesita luz. Desde una casilla de al lado, usá X, Espacio o el botón Pulso para disiparla. Pulso no te mueve ni pinta: después entrá en su casilla.",
     "focus": "Descubrir Pulso en una sala pequeña.",
     "board": "#####\n#.SP#\n#...#\n#..##\n#####"
   },
@@ -112,5 +112,47 @@ export const campaign = [
     "intro": "",
     "focus": "Resolver dos sectores, tres patrullas y un orden de apertura sin dejar piso aislado.",
     "board": "#############\n#P._..#.._.B#\n#..K..#..W..#\n#.....#.....#\n#....G#S....#\n#A_.S.#..._.#\n#############"
-  }
+  },
+  {
+    "title": "La órbita quebrada",
+    "hint": "Abrir el paso no decide por qué lado conviene cruzarlo.",
+    "intro": "",
+    "focus": "Conservar acceso al sello y recorrer los dos lados de la compuerta.",
+    "board": "#############\n#P....#....B#\n#.K...#.W...#\n#_..G.#.._..#\n#..#..#..S..#\n#...S.#...#.#\n#A....#.....#\n#############"
+},
+  {
+    "title": "El sello del sur",
+    "hint": "Antes del sello, mirá qué acceso necesitás conservar.",
+    "intro": "",
+    "focus": "Resolver un sector irregular antes de viajar, sin aislar la puerta.",
+    "board": "#############\n#P....#.W..B#\n#.....#...#.#\n#.._..#.....#\n#.S...#.....#\n#G.K..#.....#\n#A._..#..S.##\n#############"
+},
+  {
+    "title": "Ecos del vacío",
+    "hint": "Los huecos dividen el espacio aunque todavía puedas ver el otro lado.",
+    "intro": "",
+    "focus": "Ordenar rodeos alrededor de paredes y piso negro en dos sectores.",
+    "board": "#############\n#P....#..._B#\n#..#..#..._.#\n#..#K.#....W#\n#.....#.....#\n#.....#.S...#\n#A..GS#.....#\n#############"
+},
+  {
+    "title": "La tercera vigilia",
+    "hint": "Tres patrullas pueden exigir tres momentos distintos.",
+    "intro": "",
+    "focus": "Elegir el momento de Pulso para tres patrullas en un recorrido extenso.",
+    "board": "#############\n#P.S..#....B#\n#.....#.._..#\n#..K#.#.....#\n#._...#W..S.#\n#..G..#.....#\n#A....#...#.#\n#############"
+},
+  {
+    "title": "Entre dos cielos",
+    "hint": "El último paso de un sector prepara el primero del siguiente.",
+    "intro": "",
+    "focus": "Preparar la salida de A y el recorrido que comienza en B.",
+    "board": "#############\n#P....#....B#\n#....S#._...#\n#..K..#.#...#\n#.....#....##\n#...G.#..S._#\n#A....#....W#\n#############"
+},
+  {
+    "title": "La constelación imposible",
+    "hint": "Nada se mueve mientras pensás. Revisá los dos cielos antes de empezar.",
+    "intro": "",
+    "focus": "Integrar las cinco reglas en una sala avanzada con bifurcaciones.",
+    "board": "#############\n#PS.K.#....B#\n#..#..#.W#..#\n#.G...#.....#\n#.....#.....#\n#.....#.....#\n#A_...#._..S#\n#############"
+}
 ];

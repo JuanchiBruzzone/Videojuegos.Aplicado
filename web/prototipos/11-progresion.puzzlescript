@@ -202,7 +202,7 @@ message Cada paso despierta una estrella. La luz que dejás atrás guarda memori
 ##..#
 #####
 
-message Entre las estrellas se mueve algo que no responde a tus pasos de la misma manera. A veces, quedarse cerca y hacer un pulso dice más que avanzar.
+message La Sombra ocupa una casilla que todavía necesita luz. Desde una casilla de al lado, usá X, Espacio o el botón Pulso para disiparla. Pulso no te mueve ni pinta: después entrá en su casilla.
 
 #####
 #.SP#
@@ -299,4 +299,58 @@ message Hay fragmentos del observatorio que ya no esperan luz. Su silencio tambi
 #.....#.....#
 #....G#S....#
 #A_.S.#..._.#
+#############
+
+#############
+#P....#....B#
+#.K...#.W...#
+#_..G.#.._..#
+#..#..#..S..#
+#...S.#...#.#
+#A....#.....#
+#############
+
+#############
+#P....#.W..B#
+#.....#...#.#
+#.._..#.....#
+#.S...#.....#
+#G.K..#.....#
+#A._..#..S.##
+#############
+
+#############
+#P....#..._B#
+#..#..#..._.#
+#..#K.#....W#
+#.....#.....#
+#.....#.S...#
+#A..GS#.....#
+#############
+
+#############
+#P.S..#....B#
+#.....#.._..#
+#..K#.#.....#
+#._...#W..S.#
+#..G..#.....#
+#A....#...#.#
+#############
+
+#############
+#P....#....B#
+#....S#._...#
+#..K..#.#...#
+#.....#....##
+#...G.#..S._#
+#A....#....W#
+#############
+
+#############
+#PS.K.#....B#
+#..#..#.W#..#
+#.G...#.....#
+#.....#.....#
+#.....#.....#
+#A_...#._..S#
 #############

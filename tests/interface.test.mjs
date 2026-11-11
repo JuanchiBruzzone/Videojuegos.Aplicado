@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 import { engine } from './engine-helper.mjs';
 import { stages } from '../web/data/stages.js';
+import { createAudio, transitionSound } from '../web/audio.js';
 import { markdown } from '../web/markdown.js';
 
 // Ejecuta los eventos de la interfaz y el motor real sin depender de un navegador.
@@ -24,7 +25,7 @@ async function interfaceAt(levelIndex){
  document={documentElement:{dataset:{appearance:'light'}},getElementById:node,
   querySelector:node,querySelectorAll(){return [];}};
  const game=engine();
- const context={document,stages,markdown,PuzzleLab:game,console,
+ const context={document,stages,markdown,createAudio,transitionSound,PuzzleLab:game,console,
   location:{hash:`#prototipado/11-progresion/juego/${levelIndex}`},
   localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)},
   matchMedia:()=>({matches:false,addEventListener(){}}),

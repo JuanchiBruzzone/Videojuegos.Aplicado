@@ -1,5 +1,15 @@
 # Pasos de Luz — Versiones y cambios
 
+## v1.2.0 — Audio y tramo avanzado
+
+- Campaña de 22 salas: se conservan las primeras 16 y se agregan seis de 56 casillas con tres Sombras, paredes, huecos, compuerta y salto A → B.
+- Efectos y música ambiental originales sintetizados en la web. Controles independientes, preferencias guardadas, activación a pedido y pausa de música con pestaña oculta.
+- Primera presentación de Pulso explícita: teclas, cercanía y diferencia entre disipar y pintar, a partir del feedback de ambigüedad.
+- Barra de iluminación, número de nivel, estilos de controles y respuesta visual breve que respeta movimiento reducido.
+- Pilares y documento maestro con índice. Se revisaron los diez PDF adjuntos. Los originales sueltos siguen en la carpeta.
+- Autoevaluación de Juan Ignacio y objetivos ampliados en la planilla nativa; comentarios externos conservados. Estilos de Feedback, Objetivos de testeo, Gantt y Elementos.
+- 37 casos con solución encontrada y reproducida; pruebas de reglas, interfaz y audio; build. La dificultad percibida y el audio requieren validación con personas. El reporte diagonal del nivel 4 queda en revisión.
+
 ## v1.1.0 — Recorridos y pistas
 
 - Se rediseñan las 16 salas: dos recorridos iniciales breves, introducciones de mecánicas y desafíos que combinan reglas. El cierre tiene 46 casillas y tres Sombras.

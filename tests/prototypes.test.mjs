@@ -89,14 +89,14 @@ test('Pulso disipa todas las Sombras vecinas sin pintar sus casillas',()=>{
  const e=engine(),s=e.load(fixture);assert.deepEqual(Array.from(s.errors),[]);assert.deepEqual(e.input(0).objects,s.objects);
  const cleared=e.input(4);assert.equal(at(cleared,'shadoweast').length+at(cleared,'shadowwest').length,0);assert.equal(at(cleared,'dark').length,at(s,'dark').length);
 });
-test('la progresión tiene 16 salas; introduce reglas y llega a tres Sombras sin perder soluciones',()=>{
- const e=engine(),code=source('11-progresion');assert.equal(e.load(code).levels,16);
+test('la progresión tiene 22 salas; introduce reglas y llega a tres Sombras sin perder soluciones',()=>{
+ const e=engine(),code=source('11-progresion');assert.equal(e.load(code).levels,campaign.length);
  assert.equal(at(e.load(code,0),'shadoweast').length,0);assert.equal(at(e.load(code,3),'shadoweast').length,1);
  const two=e.load(code,5);assert.equal(at(two,'shadoweast').length+at(two,'shadowwest').length,2);assert.equal(at(e.load(code,6),'rune').length,1);
  assert.equal(at(e.load(code,9),'portalin').length,1);assert(at(e.load(code,12),'void').length>=1);
  const last=e.load(code,15);assert.equal(at(last,'shadoweast').length+at(last,'shadowwest').length,3);
  const results=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results;
- const campaign=results.filter(r=>r.id==='11-progresion');assert.equal(campaign.length,16);
+ const verifiedCampaign=results.filter(r=>r.id==='11-progresion');assert.equal(verifiedCampaign.length,22);
  for(const result of results.filter(r=>['09-teleporter','10-piso-negro','11-progresion'].includes(r.id))){e.load(source(result.id),result.level);for(const d of result.inputs)e.input(d);assert(e.snapshot().won);assert.equal(at(e.snapshot(),'dark').length,0);}
 });
 test('las pistas message anteceden cada mecánica sin alterar la numeración de las salas',()=>{
@@ -104,7 +104,7 @@ test('las pistas message anteceden cada mecánica sin alterar la numeración de 
  assert.equal((code.match(/^message /gm)||[]).length,5);
  for(let i=0;i<campaign.length;i++){
   const s=e.load(code,i);
-  assert.equal(s.levels,16);
+  assert.equal(s.levels,campaign.length);
   assert.equal(s.intro.replace(/\s+/g,' '),campaign[i].intro.replace(/\s+/g,' '));
   assert.equal(at(s,'player').length,1);
   if(campaign[i].intro){
@@ -121,4 +121,17 @@ test('la progresión pasa de un pasillo sin elecciones a salas con rutas que aí
  }
  assert(results[15].tiles>=40);assert(results[15].tiles>results[14].tiles);
  assert.equal(results[15].inputs.filter(d=>d===4).length,3);
+});
+
+// Las salas avanzadas deben exigir decisiones, no solamente más pasos.
+test('las seis salas avanzadas combinan tres patrullas, desvíos y las cinco reglas',()=>{
+ const e=engine(),code=source('11-progresion');
+ const results=JSON.parse(readFileSync(new URL('../web/data/verification.json',import.meta.url),'utf8')).results.filter(r=>r.id==='11-progresion'&&r.level>=16);
+ assert.equal(results.length,6);
+ for(const r of results){
+  const s=e.load(code,r.level);assert.equal(r.shadows,3);assert(r.tiles>46);assert(r.routeChoices>=3);assert(r.losingChoices>=1);
+  for(const name of ['rune','gateclosed','portalin','portalout','void'])assert(at(s,name).length>0);
+  for(const d of r.inputs)e.input(d);assert(e.snapshot().won);
+  const restored=e.restart();assert.deepEqual(restored.objects,s.objects);
+ }
 });

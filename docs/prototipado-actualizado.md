@@ -110,13 +110,13 @@ La forma del piso pasa a ser otra herramienta para diseñar los niveles: puedo c
 
 ## Aprender jugando
 
-La versión **1.1.0** tiene 16 salas. Empieza con dos recorridos de cinco casillas y llega a un cierre de 46 casillas con tres Sombras. La dificultad crece por el orden del recorrido, las rutas que se pueden cerrar y las combinaciones de reglas.
+La versión **1.2.0** tiene 22 salas. Conserva los dos recorridos iniciales breves y el cierre original de 46 casillas; agrega seis salas avanzadas de 56 casillas y tres Sombras. La dificultad crece por el orden del recorrido, las rutas que se pueden cerrar y las combinaciones de reglas.
 
 ### Pistas entre mecánicas
 
 Antes de presentar pintura, Pulso, sello, teleporter y piso negro aparece una pantalla de texto en español. La pista sugiere qué observar sin dar una secuencia de movimientos. Enter, Espacio o el botón permiten continuar; esa pulsación no mueve al jugador ni usa Pulso. La pista también se puede volver a leer.
 
-Estas pantallas son instrucciones `message` dentro del código de PuzzleScript. La web las muestra antes de la sala correspondiente y conserva la numeración de los 16 niveles.
+Estas pantallas son instrucciones `message` dentro del código de PuzzleScript. La web las muestra antes de la sala correspondiente y conserva la numeración de los 22 niveles.
 
 | Niveles | Qué se aprende | Cómo crece el desafío |
 | --- | --- | --- |
@@ -126,6 +126,7 @@ Estas pantallas son instrucciones `message` dentro del código de PuzzleScript. 
 | 10–12 | Teleporter A → B | Terminar un sector antes de viajar; después agregar compuerta y patrullas a ambos lados del salto |
 | 13–14 | Piso negro fijo | Elegir rutas alrededor de huecos y después resolver dos sectores con una patrulla |
 | 15–16 | Todas las reglas | Dos sectores con 41 y 46 casillas; sello, compuerta, viaje de ida, huecos y dos o tres Sombras |
+| 17–22 | Planificación avanzada | Seis salas de 56 casillas y tres Sombras; paredes y huecos que alteran el orden de ambos sectores |
 
 Al presentar una regla nueva bajo temporalmente la cantidad de combinaciones. Después vuelvo a exigirla en una sala mayor. Una introducción breve y un cierre exigente cumplen funciones distintas dentro de la progresión.
 
@@ -144,3 +145,11 @@ El verificador encuentra una solución de cada sala y la reproduce en el motor o
 Esto comprueba que los desafíos son resolubles y que existen errores de recorrido. Para ajustar su dificultad percibida queda observar partidas: dónde hace falta una explicación, qué pistas se entienden y cuánto cambia la experiencia entre las últimas salas.
 
 Los comentarios y ajustes de esta versión están registrados en el documento de feedback. El código completo, los cambios y la versión anterior se conservan en el Markdown del juego.
+
+## Pulido y feedback de v1.2.0
+
+Aclaré cómo usar X, Espacio y el botón Pulso, y que sacar una Sombra no pinta su casilla. Diego D había señalado que el mensaje era ambiguo. Me falta reproducir el bloqueo diagonal que reportó; su comentario y el de Vanesa siguen en la planilla.
+
+La web agrega efectos y música originales sintetizados, controles independientes y preferencias guardadas. La música se pausa al ocultar la pestaña. La barra de iluminación y el contador de nivel ayudan a leer el progreso. La respuesta visual al paso y a Pulso respeta movimiento reducido.
+
+Los 37 casos tienen solución comprobada en el motor. Me falta probar el audio y la dificultad con otras personas.
