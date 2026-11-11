@@ -113,7 +113,7 @@ function update(){
  $('engine-state').textContent='Hecho en PuzzleScript';
  if(boardState.won&&selected.campaign&&!campaignCompleted.has(levelIndex)){campaignCompleted.add(levelIndex);try{localStorage.setItem('pasos-campaign-levels-1.1',JSON.stringify([...campaignCompleted]));}catch{}}
  if(boardState.won&&(!selected.campaign||campaignCompleted.size===selected.levels.length)&&!completed.has(selected.id)){completed.add(selected.id);try{localStorage.setItem('pasos-completed',JSON.stringify([...completed]));}catch{}renderNav();}
- $('level-progress').textContent=selected.campaign?`Nivel ${levelIndex+1} de ${selected.levels.length} · ${campaignCompleted.size} completados`:'';
+ $('level-progress').textContent=selected.campaign?`Nivel ${levelIndex+1} de ${selected.levels.length} · ${campaignCompleted.size} ${campaignCompleted.size===1?'completado':'completados'}`:'';
  draw();
 }
 function input(direction){
